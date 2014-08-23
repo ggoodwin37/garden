@@ -22,6 +22,7 @@
     "eyes": "^0.1.8",
     "getconfig": "^0.3.0",
     "hapi": "^6.5.1",
+    "jquery": "^2.1.1",
     "moonboots_hapi": "^2.4.0",
     "templatizer": "^1.0.0"
   },
