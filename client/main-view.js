@@ -8,9 +8,12 @@ module.exports = View.extend({
 	autoRender: true,
 	render: function () {
 		this.renderWithTemplate();
-		var $canvas = $('[role="main-canvas"]');
 
 		// TODO: resize handler
+		var $canvasContainer = $('.canvas-container');
+		var $canvas = $('[role="main-canvas"]');
+		// canvas is funky and wants width/height attributes on the el rather than css.
+		$canvas.attr('width', $canvasContainer.width()).attr('height', $canvasContainer.height());
 		console.log('canvas size is ' + $canvas.width() + ' x ' + $canvas.height());
 
 		// testing
