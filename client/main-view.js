@@ -4,7 +4,7 @@ var templates = require('./templates');
 module.exports = View.extend({
 	template: templates.body,
 	autoRender: true,
-	intialize: function() {
-		window.alert('hello dere');  // TODO not firing.
+	initialize: function() {
+		window.alert('main-view init');
 	}
 });
