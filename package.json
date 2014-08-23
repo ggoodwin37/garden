@@ -24,6 +24,8 @@
     "templatizer": "^1.0.0"
   },
   "devDependencies": {
+    "gulp": "^3.8.7",
+    "gulp-less": "^1.3.5",
     "jshint": "^2.5.4",
     "precommit-hook": "^1.0.7"
   }
