@@ -9,7 +9,9 @@ function startServerInstance(done) {
 	// 	inspect: inspect
 	// };
 
-	var server = new hapi.Server(config.serverPort, config.serverHost, {
+	var port = process.env.PORT;
+	var host = process.env.IP;
+	var server = new hapi.Server(port, host, {
 		// not using any server views right now.
 		// views: {
 		//     engines: { jade: require('jade') },

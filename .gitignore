@@ -12,3 +12,6 @@ client/templates.js
 
 # generated css
 dist/css
+
+# cloud9 stuff
+.c9
