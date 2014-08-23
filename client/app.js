@@ -11,3 +11,5 @@ window.app = {
 		});
 	}
 };
+
+window.app.init();

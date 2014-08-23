@@ -5,6 +5,6 @@ module.exports = View.extend({
 	template: templates.body,
 	autoRender: true,
 	intialize: function() {
-		window.alert('hello');
+		window.alert('hello dere');  // TODO not firing.
 	}
 });
