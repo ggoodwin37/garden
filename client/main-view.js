@@ -19,11 +19,12 @@ module.exports = View.extend({
 		// testing
 		var cx = $canvas.width() / 2;
 		var cy = $canvas.height() / 2;
-		var radius = 10;
-		var thetaDeg = 0;
-		var thrusters = false;
+		var radius = 30;
+		var thetaDeg = 245;
+		var thrusters = true;
 
-		drawObjects.drawShip($canvas, cx, cy, radius, thetaDeg, thrusters);
+		var context = $canvas.get(0).getContext('2d');
+		drawObjects.drawShip(context, cx, cy, radius, thetaDeg, thrusters);
 
 		return this;
 	}
