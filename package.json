@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/ggoodwin37/benterprise/issues"
   },
-  "homepage": "https://github.com/ggoodwin37/benterprise"
+  "homepage": "https://github.com/ggoodwin37/benterprise",
+  "dependencies": {
+    "eyes": "^0.1.8",
+    "getconfig": "^0.3.0",
+    "hapi": "^6.5.1",
+    "moonboots_hapi": "^2.4.0",
+    "templatizer": "^1.0.0"
+  }
 }
