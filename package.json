@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/ggoodwin37/benterprise",
   "dependencies": {
+    "ampersand-view": "^6.0.11",
+    "domready": "^1.0.6",
     "eyes": "^0.1.8",
     "getconfig": "^0.3.0",
     "hapi": "^6.5.1",
