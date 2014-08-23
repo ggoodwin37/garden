@@ -4,7 +4,7 @@
   "description": "Space game",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jshint . && exit 0"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
     "hapi": "^6.5.1",
     "moonboots_hapi": "^2.4.0",
     "templatizer": "^1.0.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.5.4",
+    "precommit-hook": "^1.0.7"
   }
 }

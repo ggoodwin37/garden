@@ -1,2 +1,1 @@
-var startServerInstance = require('./server-instance');
-var serverInstance = startServerInstance();
+require('./server-instance')();
