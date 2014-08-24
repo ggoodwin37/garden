@@ -2,14 +2,15 @@ var raf = require('raf');
 var Ship = require('./ship');
 var KeyHandler = require('./key-handler');
 var drawObjects = require('./draw-objects');
+var $ = require('jquery');
 
 function Game($canvas) {
-	this.keyHandler = new KeyHandler($canvas);
+	this.keyHandler = new KeyHandler($(document));
 	this.keyHandler.on('keydown', function(ev) {
-		console.log('somethings down');
+		console.log('somethings down', ev);
 	});
 	this.keyHandler.on('keyup', function(ev) {
-		console.log('somethings up');
+		console.log('somethings up', ev);
 	});
 
 	this.ctx = $canvas.get(0).getContext('2d');
