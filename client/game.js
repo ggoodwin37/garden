@@ -1,8 +1,17 @@
 var raf = require('raf');
 var Ship = require('./ship');
+var KeyHandler = require('./key-handler');
 var drawObjects = require('./draw-objects');
 
 function Game($canvas) {
+	this.keyHandler = new KeyHandler($canvas);
+	this.keyHandler.on('keydown', function(ev) {
+		console.log('somethings down');
+	});
+	this.keyHandler.on('keyup', function(ev) {
+		console.log('somethings up');
+	});
+
 	this.ctx = $canvas.get(0).getContext('2d');
 
 	var ship = new Ship();
