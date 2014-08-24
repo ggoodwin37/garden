@@ -1,3 +1,5 @@
+var BLANK_CANVAS_COLOR = '#0c0c0c';
+
 var SHIP_COLOR = '#0f0';
 var SHIP_LINE_WIDTH = 2;
 var SHIP_WING_ANGLE_DEG = 140;
@@ -21,6 +23,12 @@ function interp(v1, v2, f) {
 }
 
 var drawObjects = {
+	clearCtx: function(ctx) {
+		var w = ctx.canvas.clientWidth;
+		var h = ctx.canvas.clientHeight;
+		ctx.fillStyle = BLANK_CANVAS_COLOR;
+		ctx.fillRect(0, 0, w, h);
+	},
 	drawShip: function(ctx, cx, cy, rBounding, thetaDeg, thrusters) {
 		var i;
 
