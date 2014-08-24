@@ -11,7 +11,8 @@ function Game($canvas) {
 	ship.thetaDeg = 238;
 	ship.r = 30;
 	ship.thrustersActive = true;
-	ship.vx = 100;
+	ship.vx = 300;
+	ship.vy = 220;
 	this.ship = ship;
 
 	this.rafHandle = null;
@@ -46,6 +47,7 @@ Game.prototype.timerTick = function() {
 Game.prototype.gameLoop = function(deltaMs) {
 	// game logic
 	this.ship.update(deltaMs);
+	this.ship.thetaDeg += 2;  // test
 
 	// drawing
 	drawObjects.clearCtx(this.ctx);

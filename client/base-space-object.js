@@ -25,6 +25,31 @@ BaseSpaceObject.prototype.update = function(deltaMs) {
 	this.vx += timeFactor * this.ax;
 	this.vy += timeFactor * this.ay;
 	// TODO: maybe we just have a thrust vector and get ax and ay from theta and thrust.
+
+	this.checkWrap();
+};
+
+BaseSpaceObject.prototype.checkWrap = function() {
+	var canvasWidth = window.app.canvasSize.width;
+	var canvasHeight = window.app.canvasSize.height;
+	while (this.x > canvasWidth) {
+		this.x -= canvasWidth;
+	}
+	while (this.x + this.r < 0) {
+		this.x += canvasWidth;
+	}
+	while (this.y > canvasHeight) {
+		this.y -= canvasHeight;
+	}
+	while (this.y + this.r < 0) {
+		this.y += canvasHeight;
+	}
+	while (this.thetaDeg > 360) {
+		this.thetaDeg -= 360;
+	}
+	while (this.thetaDeg < 0) {
+		this.thetaDeg += 360;
+	}
 };
 
 module.exports = BaseSpaceObject;

@@ -14,5 +14,8 @@ Ship.prototype.draw = function(ctx) {
 };
 
 // TODO: how do we override base and call super?
+Ship.prototype.updateShip = function(deltaMs) {
+	this.update(deltaMs);
+};
 
 module.exports = Ship;

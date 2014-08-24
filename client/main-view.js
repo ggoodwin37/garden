@@ -14,7 +14,8 @@ module.exports = View.extend({
 		var $canvas = $('[role="main-canvas"]');
 		// canvas is funky and wants width/height attributes on the el rather than css.
 		$canvas.attr('width', $canvasContainer.width()).attr('height', $canvasContainer.height());
-		console.log('canvas size is ' + $canvas.width() + ' x ' + $canvas.height());
+		window.app.canvasSize = {width: $canvas.width(), height: $canvas.height()};
+		console.log('canvas size is ' + window.app.canvasSize.width + ' x ' + window.app.canvasSize.height);
 
 		var game = new Game($canvas);
 		game.start();
