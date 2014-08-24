@@ -32,13 +32,14 @@ BaseSpaceObject.prototype.update = function(deltaMs) {
 BaseSpaceObject.prototype.checkWrap = function() {
 	var canvasWidth = window.app.canvasSize.width;
 	var canvasHeight = window.app.canvasSize.height;
-	while (this.x > canvasWidth) {
+	while (this.x - this.r > canvasWidth) {
 		this.x -= canvasWidth;
 	}
 	while (this.x + this.r < 0) {
+		// TODO: verify this case, I think it might be wrapping a little short.
 		this.x += canvasWidth;
 	}
-	while (this.y > canvasHeight) {
+	while (this.y - this.r > canvasHeight) {
 		this.y -= canvasHeight;
 	}
 	while (this.y + this.r < 0) {
