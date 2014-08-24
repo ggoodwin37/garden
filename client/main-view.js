@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var View = require('ampersand-view');
 var templates = require('./templates');
-var Ship = require('./ship');
+var Game = require('./game');
 
 module.exports = View.extend({
 	template: templates.body,
@@ -16,15 +16,8 @@ module.exports = View.extend({
 		$canvas.attr('width', $canvasContainer.width()).attr('height', $canvasContainer.height());
 		console.log('canvas size is ' + $canvas.width() + ' x ' + $canvas.height());
 
-		var context = $canvas.get(0).getContext('2d');
-
-		var ship = new Ship();
-		ship.x = $canvas.width() / 2;
-		ship.y = $canvas.height() / 2;
-		ship.thetaDeg = 245;
-		ship.r = 30;
-		ship.thrustersActive = true;
-		ship.draw(context);
+		var game = new Game($canvas);
+		game.start();
 
 		return this;
 	}
