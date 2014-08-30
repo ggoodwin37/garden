@@ -33,17 +33,16 @@ BaseSpaceObject.prototype.checkWrap = function() {
 	var canvasWidth = window.app.canvasSize.width;
 	var canvasHeight = window.app.canvasSize.height;
 	while (this.x - this.r > canvasWidth) {
-		this.x -= canvasWidth;
+		this.x -= canvasWidth + this.r;
 	}
 	while (this.x + this.r < 0) {
-		// TODO: verify this case, I think it might be wrapping a little short.
-		this.x += canvasWidth;
+		this.x += canvasWidth + this.r;
 	}
 	while (this.y - this.r > canvasHeight) {
-		this.y -= canvasHeight;
+		this.y -= canvasHeight + this.r;
 	}
 	while (this.y + this.r < 0) {
-		this.y += canvasHeight;
+		this.y += canvasHeight + this.r;
 	}
 	while (this.thetaDeg > 360) {
 		this.thetaDeg -= 360;

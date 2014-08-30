@@ -16,9 +16,9 @@ function Game($canvas) {
 	ship.y = $canvas.height() / 2;
 	ship.thetaDeg = 238;
 	ship.r = 30;
-	ship.thrustersActive = true;
-	ship.vx = 300;
-	ship.vy = 220;
+	ship.thrustersActive = false;
+	ship.vx = 0;
+	ship.vy = 0;
 	this.ship = ship;
 
 	this.rafHandle = null;
@@ -52,8 +52,7 @@ Game.prototype.timerTick = function() {
 
 Game.prototype.gameLoop = function(deltaMs) {
 	// game logic
-	this.ship.update(deltaMs);
-	this.ship.thetaDeg += 2;  // test
+	this.ship.updateShip(deltaMs);
 
 	// drawing
 	drawObjects.clearCtx(this.ctx);
@@ -61,9 +60,26 @@ Game.prototype.gameLoop = function(deltaMs) {
 };
 
 Game.prototype.onKeyDown = function(dir) {
+	if (dir == 'left') {
+		this.ship.turningLeft = true;
+	} else if (dir == 'right') {
+		this.ship.turningRight = true;
+	} else if (dir == 'up') {
+		this.ship.thrustersActive = true;
+	} else if (dir == 'down') {
+		// TODO: shooting
+	}
 };
 
 Game.prototype.onKeyUp = function(dir) {
+	if (dir == 'left') {
+		this.ship.turningLeft = false;
+	} else if (dir == 'right') {
+		this.ship.turningRight = false;
+	} else if (dir == 'up') {
+		this.ship.thrustersActive = false;
+	} else if (dir == 'down') {
+	}
 };
 
 module.exports = Game;
