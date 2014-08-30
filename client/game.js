@@ -6,12 +6,8 @@ var $ = require('jquery');
 
 function Game($canvas) {
 	this.keyHandler = new KeyHandler($(document));
-	this.keyHandler.on('keydown', function(ev) {
-		console.log('somethings down', ev);
-	});
-	this.keyHandler.on('keyup', function(ev) {
-		console.log('somethings up', ev);
-	});
+	this.keyHandler.on('keydown', this.onKeyDown.bind(this));
+	this.keyHandler.on('keyup', this.onKeyUp.bind(this));
 
 	this.ctx = $canvas.get(0).getContext('2d');
 
@@ -62,6 +58,12 @@ Game.prototype.gameLoop = function(deltaMs) {
 	// drawing
 	drawObjects.clearCtx(this.ctx);
 	this.ship.draw(this.ctx);
+};
+
+Game.prototype.onKeyDown = function(dir) {
+};
+
+Game.prototype.onKeyUp = function(dir) {
 };
 
 module.exports = Game;

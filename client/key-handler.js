@@ -1,13 +1,19 @@
 var EventEmitter = require('event-emitter');
+var keyMappings = require('./key-mappings');
 
 function KeyHandler($el) {
 	var self = this;
-	// TODO: transform ev to game-space data
 	$el.on('keydown', function(ev) {
-		self.emit('keydown', ev);
+		var key = 'key-' + ev.which;
+		if (keyMappings[key]) {
+			self.emit('keydown', keyMappings[key]);
+		}
 	});
 	$el.on('keyup', function(ev) {
-		self.emit('keyup', ev);
+		var key = 'key-' + ev.which;
+		if (keyMappings[key]) {
+			self.emit('keyup', keyMappings[key]);
+		}
 	});
 }
 KeyHandler.prototype = new EventEmitter();
