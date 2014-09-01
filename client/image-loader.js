@@ -2,12 +2,15 @@ var async = require('async');
 
 var imageList = ['/img/benterprise1.png'];
 
+var imageMap = {};
+
 function imageLoader(done) {
 	var taskList = [];
 	imageList.forEach(function(thisPath) {
 		taskList.push(function(cb) {
 			var thisImage = new Image();
 			thisImage.onload = function() {
+				imageMap[thisPath] = thisImage;
 				cb();
 			};
 			thisImage.src = thisPath;
@@ -16,4 +19,7 @@ function imageLoader(done) {
 	});
 }
 
-module.exports = imageLoader;
+module.exports = {
+	imageLoader: imageLoader,
+	imageMap: imageMap
+};

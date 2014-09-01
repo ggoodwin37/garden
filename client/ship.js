@@ -15,8 +15,7 @@ function Ship() {
 Ship.prototype = new BaseSpaceObject();
 
 Ship.prototype.draw = function(ctx) {
-	// TODO: do we need a coordinate transform here?
-	drawObjects.drawShip(ctx, this.x, this.y, this.r, this.thetaDeg, this.thrustersActive);
+	drawObjects.drawShipSprite(ctx, this.x, this.y, this.r, this.thetaDeg, this.thrustersActive);
 };
 
 // TODO: how do we override base and call super?
