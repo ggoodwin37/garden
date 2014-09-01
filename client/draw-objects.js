@@ -2,6 +2,7 @@ var imageMap = require('./image-loader.js').imageMap;
 
 var BLANK_CANVAS_COLOR = '#0c0c0c';
 
+// drawShipPrimitives
 var SHIP_COLOR = '#0f0';
 var SHIP_LINE_WIDTH = 2;
 var SHIP_WING_ANGLE_DEG = 140;
@@ -10,8 +11,9 @@ var THRUSTER_COLOR = '#f00';
 var THRUSTER_LINE_WIDTH = 1;
 var THRUSTER_RATIO = 0.6;
 
-var SHIP_SPRITE_SW = 16;
-var SHIP_SPRITE_SH = 16;
+// drawShipSprite
+var SHIP_SPRITE_SW = 64;
+var SHIP_SPRITE_SH = 64;
 
 var deg2Rad = require('./deg2rad');
 
