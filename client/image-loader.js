@@ -1,6 +1,7 @@
 var async = require('async');
 
-var imageList = ['/img/benterprise1.png'];
+var imageList = ['/img/ben-ship-on.png', '/img/ben-ship-off.png', '/img/ben-rock-lg.png',
+				 '/img/ben-rock-med.png', '/img/ben-rock-sm.png', '/img/ben-laser.png'];
 
 var imageMap = {};
 
