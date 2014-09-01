@@ -1,3 +1,5 @@
+var imageMap = require('./image-loader.js').imageMap;
+
 var BLANK_CANVAS_COLOR = '#0c0c0c';
 
 var SHIP_COLOR = '#0f0';
@@ -7,6 +9,13 @@ var SHIP_BUTT_RATIO = 0.3;
 var THRUSTER_COLOR = '#f00';
 var THRUSTER_LINE_WIDTH = 1;
 var THRUSTER_RATIO = 0.6;
+
+var SHIP_SPRITE_SW = 16;
+var SHIP_SPRITE_SH = 16;
+var SHIP_SPRITE_SX_OFF = 0;
+var SHIP_SPRITE_SY_OFF = 0;
+var SHIP_SPRITE_SX_ON = 16;
+var SHIP_SPRITE_SY_ON = 0;
 
 var deg2Rad = require('./deg2rad');
 
@@ -27,7 +36,7 @@ var drawObjects = {
 		ctx.fillStyle = BLANK_CANVAS_COLOR;
 		ctx.fillRect(0, 0, w, h);
 	},
-	drawShip: function(ctx, cx, cy, rBounding, thetaDeg, thrusters) {
+	drawShipPrimitives: function(ctx, cx, cy, rBounding, thetaDeg, thrusters) {
 		var i;
 
 		// TODO: can refactor this?
@@ -75,7 +84,25 @@ var drawObjects = {
 		}
 		ctx.closePath();
 		ctx.fill();
+	},
+	drawShipSprite: function(ctx, cx, cy, rBounding, thetaDeg, thrusters) {
+		var img = imageMap['/img/benterprise1.png'];
+		if (!img) {
+			console.log('error: sprite not available??');
+			return;
+		}
+
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.translate(cx + rBounding, cy + rBounding);
+		ctx.rotate(deg2Rad(thetaDeg + 90));
+		ctx.translate(-(cx + rBounding), -(cy + rBounding));
+		ctx.drawImage(img,
+					  thrusters ? SHIP_SPRITE_SX_ON : SHIP_SPRITE_SX_OFF,
+					  thrusters ? SHIP_SPRITE_SY_ON : SHIP_SPRITE_SY_OFF,
+					  SHIP_SPRITE_SW, SHIP_SPRITE_SH,
+					  cx, cy, rBounding * 2, rBounding * 2);
 	}
+
 };
 
 module.exports = drawObjects;

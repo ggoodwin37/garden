@@ -50,6 +50,17 @@ function startServerInstance(done) {
 			done && done(server);
 		});
 	});
+
+	// static files
+	server.route({
+		method: 'GET',
+		path: '/img/{filename*}',
+		handler: {
+			directory: {
+				path: 'img'
+			}
+		}
+	});
 	return server;
 }
 
