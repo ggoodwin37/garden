@@ -15,7 +15,6 @@ function Game($canvas) {
 	ship.x = $canvas.width() / 2;
 	ship.y = $canvas.height() / 2;
 	ship.thetaDeg = 238;
-	ship.r = 30;
 	ship.thrustersActive = false;
 	ship.vx = 0;
 	ship.vy = 0;
