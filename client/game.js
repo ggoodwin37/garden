@@ -13,9 +13,11 @@ function Game($canvas) {
 	this.keyHandler.on('keyup', this.onKeyUp.bind(this));
 
 	this.ctx = $canvas.get(0).getContext('2d');
+	this.canvasWidth = $canvas.width();
+	this.canvasHeight = $canvas.height();
 
-	this.createShip($canvas);
-	this.createRocks($canvas);
+	this.createShip();
+	this.createRocks();
 
 	this.rafHandle = null;
 	this.timerTick = this.timerTick.bind(this);
@@ -26,35 +28,33 @@ Game.prototype.start = function() {
 	this.scheduleTick();
 };
 
-Game.prototype.createShip = function($canvas) {
+Game.prototype.createShip = function() {
 	var ship = new Ship();
-	ship.x = $canvas.width() / 2;
-	ship.y = $canvas.height() / 2;
+	ship.x = this.canvasWidth / 2;
+	ship.y = this.canvasHeight / 2;
 	this.ship = ship;
 };
 
-Game.prototype.createRocks = function($canvas) {
+Game.prototype.createRocks = function() {
 	var i;
 	var thisRock;
 	var rockList = [];
-	var w = $canvas.width();
-	var h = $canvas.height();
 	for (i = 0; i < constants.numSmallRocks; ++i) {
 		thisRock = new Rock('small');
-		thisRock.x = Math.random() * w;
-		thisRock.y = Math.random() * h;
+		thisRock.x = Math.random() * this.canvasWidth;
+		thisRock.y = Math.random() * this.canvasHeight;
 		rockList.push(thisRock);
 	}
 	for (i = 0; i < constants.numMediumRocks; ++i) {
 		thisRock = new Rock('medium');
-		thisRock.x = Math.random() * w;
-		thisRock.y = Math.random() * h;
+		thisRock.x = Math.random() * this.canvasWidth;
+		thisRock.y = Math.random() * this.canvasHeight;
 		rockList.push(thisRock);
 	}
 	for (i = 0; i < constants.numLargeRocks; ++i) {
 		thisRock = new Rock('large');
-		thisRock.x = Math.random() * w;
-		thisRock.y = Math.random() * h;
+		thisRock.x = Math.random() * this.canvasWidth;
+		thisRock.y = Math.random() * this.canvasHeight;
 		rockList.push(thisRock);
 	}
 	this.rockList = rockList;
@@ -84,7 +84,15 @@ Game.prototype.gameLoop = function(deltaMs) {
 	var self = this;
 
 	// game logic
-	this.ship.updateShip(deltaMs);
+	if (this.ship.state == 'alive') {
+		this.ship.updateShip(deltaMs);
+		this.checkShipRockCollisions();
+	} else if (this.ship.state == 'dead') {
+		this.ship.deadTime -= deltaMs;
+		if (this.ship.deadTime <= 0) {
+			this.shipReborn();
+		}
+	}
 	this.rockList.forEach(function(thisRock) {
 		thisRock.updateRock(deltaMs);
 	});
@@ -95,6 +103,32 @@ Game.prototype.gameLoop = function(deltaMs) {
 	this.rockList.forEach(function(thisRock) {
 		thisRock.draw(self.ctx);
 	});
+};
+
+Game.prototype.checkShipRockCollisions = function() {
+	var self = this;
+
+	// for now, do a brute-force check. later we can improve this by using a grid or something.
+	// also, this doesn't handle collisions around the edges correctly.
+	this.rockList.forEach(function(thisRock) {
+		var dx = thisRock.x - self.ship.x;
+		var dy = thisRock.y - self.ship.y;
+		var distSquared = (dx * dx) + (dy * dy);
+		var limitSquared = (thisRock.r + self.ship.r) * (thisRock.r + self.ship.r);
+		if (distSquared < limitSquared) {
+			self.shipHitRock();
+			return;
+		}
+	});
+};
+
+Game.prototype.shipHitRock = function() {
+	this.ship.state = 'dead';
+	this.ship.deadTime = constants.shipDeadTimeMs;
+};
+
+Game.prototype.shipReborn = function() {
+	this.createShip();
 };
 
 Game.prototype.onKeyDown = function(dir) {

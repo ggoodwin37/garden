@@ -11,11 +11,16 @@ function Ship() {
 	this.turningRight = false;
 	this.thetaDeg = 270;
 	this.r = constants.shipRadius;
+
+	this.state = 'alive';
+	this.deadTime = 0;
 }
 Ship.prototype = new BaseSpaceObject();
 
 Ship.prototype.draw = function(ctx) {
-	drawObjects.drawShipSprite(ctx, this.x, this.y, this.r, this.thetaDeg, this.thrustersActive);
+	if (this.state == 'alive') {
+		drawObjects.drawShipSprite(ctx, this.x, this.y, this.r, this.thetaDeg, this.thrustersActive);
+	}
 };
 
 // TODO: how do we override base and call super?

@@ -4,6 +4,8 @@ module.exports = {
 	shipThrust: 7,
 	shipVelMax: 14,
 
+	shipDeadTimeMs: 2000,
+
 	rockSmallRadius: 15,
 	rockMediumRadius: 30,
 	rockLargeRadius: 60,
