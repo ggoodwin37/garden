@@ -16,8 +16,8 @@ function imageLoader(done) {
 			};
 			thisImage.src = thisPath;
 		});
-		async.parallelLimit(taskList, 6, done);
 	});
+	async.parallelLimit(taskList, 6, done);
 }
 
 module.exports = {

@@ -25,12 +25,13 @@ function Rock(size) {
 	} else {
 		console.log('you fail at passing me a value for rock size.');
 	}
+	this.size = size;
 	this.thetaDeg = randomBipolar(180);
 }
 Rock.prototype = new BaseSpaceObject();
 
 Rock.prototype.draw = function(ctx) {
-	drawObjects.drawRockSprite(ctx, this.x, this.y, this.r, this.thetaDeg);
+	drawObjects.drawRockSprite(ctx, this.x, this.y, this.r, this.thetaDeg, this.size);
 };
 
 // TODO: how do we override base and call super?

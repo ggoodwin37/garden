@@ -9,6 +9,7 @@ function Ship() {
 	this.thrustersActive = false;
 	this.turningLeft = false;
 	this.turningRight = false;
+	this.thetaDeg = 270;
 	this.r = constants.shipRadius;
 }
 Ship.prototype = new BaseSpaceObject();

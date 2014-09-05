@@ -14,5 +14,14 @@ module.exports = {
 
 	rockVelSmall: 12,
 	rockVelMedium: 9,
-	rockVelLarge: 5
+	rockVelLarge: 5,
+
+	numSmallRocks: 3,
+	numMediumRocks: 2,
+	numLargeRocks: 1,
+
+	shipSpriteSrcSize: 64,
+	rockSmallSpriteSrcSize: 32,
+	rockMediumSpriteSrcSize: 64,
+	rockLargeSpriteSrcSize: 128
 };
