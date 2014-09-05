@@ -8,17 +8,17 @@ module.exports = {
 	rockMediumRadius: 30,
 	rockLargeRadius: 60,
 
-	rockAngVelSmall: 340,
-	rockAngVelMedium: 150,
-	rockAngVelLarge: 95,
+	rockAngVelSmall: 440,
+	rockAngVelMedium: 100,
+	rockAngVelLarge: 55,
 
-	rockVelSmall: 12,
-	rockVelMedium: 9,
-	rockVelLarge: 5,
+	rockVelSmall: 160,
+	rockVelMedium: 100,
+	rockVelLarge: 70,
 
-	numSmallRocks: 3,
-	numMediumRocks: 2,
-	numLargeRocks: 1,
+	numSmallRocks: 8,
+	numMediumRocks: 6,
+	numLargeRocks: 4,
 
 	shipSpriteSrcSize: 64,
 	rockSmallSpriteSrcSize: 32,
