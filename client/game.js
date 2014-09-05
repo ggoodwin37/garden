@@ -1,8 +1,11 @@
 var raf = require('raf');
 var Ship = require('./ship');
+var Rock = require('./rock');
 var KeyHandler = require('./key-handler');
 var drawObjects = require('./draw-objects');
 var $ = require('jquery');
+
+var constants = require('./constants');
 
 function Game($canvas) {
 	this.keyHandler = new KeyHandler($(document));
@@ -11,15 +14,8 @@ function Game($canvas) {
 
 	this.ctx = $canvas.get(0).getContext('2d');
 
-	var ship = new Ship();
-	ship.x = $canvas.width() / 2;
-	ship.y = $canvas.height() / 2;
-	ship.thetaDeg = 238;
-	ship.r = 30;
-	ship.thrustersActive = false;
-	ship.vx = 0;
-	ship.vy = 0;
-	this.ship = ship;
+	this.createShip($canvas);
+	this.createRocks($canvas);
 
 	this.rafHandle = null;
 	this.timerTick = this.timerTick.bind(this);
@@ -28,6 +24,40 @@ function Game($canvas) {
 
 Game.prototype.start = function() {
 	this.scheduleTick();
+};
+
+Game.prototype.createShip = function($canvas) {
+	var ship = new Ship();
+	ship.x = $canvas.width() / 2;
+	ship.y = $canvas.height() / 2;
+	this.ship = ship;
+};
+
+Game.prototype.createRocks = function($canvas) {
+	var i;
+	var thisRock;
+	var rockList = [];
+	var w = $canvas.width();
+	var h = $canvas.height();
+	for (i = 0; i < constants.numSmallRocks; ++i) {
+		thisRock = new Rock('small');
+		thisRock.x = Math.random() * w;
+		thisRock.y = Math.random() * h;
+		rockList.push(thisRock);
+	}
+	for (i = 0; i < constants.numMediumRocks; ++i) {
+		thisRock = new Rock('medium');
+		thisRock.x = Math.random() * w;
+		thisRock.y = Math.random() * h;
+		rockList.push(thisRock);
+	}
+	for (i = 0; i < constants.numLargeRocks; ++i) {
+		thisRock = new Rock('large');
+		thisRock.x = Math.random() * w;
+		thisRock.y = Math.random() * h;
+		rockList.push(thisRock);
+	}
+	this.rockList = rockList;
 };
 
 Game.prototype.scheduleTick = function() {
@@ -51,12 +81,20 @@ Game.prototype.timerTick = function() {
 };
 
 Game.prototype.gameLoop = function(deltaMs) {
+	var self = this;
+
 	// game logic
 	this.ship.updateShip(deltaMs);
+	this.rockList.forEach(function(thisRock) {
+		thisRock.updateRock(deltaMs);
+	});
 
 	// drawing
 	drawObjects.clearCtx(this.ctx);
 	this.ship.draw(this.ctx);
+	this.rockList.forEach(function(thisRock) {
+		thisRock.draw(self.ctx);
+	});
 };
 
 Game.prototype.onKeyDown = function(dir) {

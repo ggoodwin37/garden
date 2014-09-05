@@ -9,6 +9,7 @@ function BaseSpaceObject() {
 	this.vy = 0;
 	this.vTheta = 0;
 
+	// TODO: I think these are unused.
 	this.ax = 0;
 	this.ay = 0;
 	// not modelling rotational acceleration
