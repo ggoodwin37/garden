@@ -3,7 +3,7 @@ var constants = require('./constants');
 
 var BLANK_CANVAS_COLOR = '#0c0c0c',
 	TEST_CANVAS_COLOR = '#d0d',
-	testBounds = true;
+	testBounds = false;
 
 var deg2Rad = require('./deg2rad');
 
