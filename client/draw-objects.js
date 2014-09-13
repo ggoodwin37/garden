@@ -23,18 +23,21 @@ var drawObjects = {
 
 		ctx.save();
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.translate(cx + rBounding, cy + rBounding);
+		ctx.translate(cx, cy);
 		ctx.rotate(deg2Rad(thetaDeg + 90));
-		ctx.translate(-(cx + rBounding), -(cy + rBounding));
+		ctx.translate(-cx, -cy);
 
 		if (testBounds) {
+			ctx.beginPath();
+			ctx.arc(cx, cy, rBounding, 2 * Math.PI, false);
 			ctx.fillStyle = TEST_CANVAS_COLOR;
-			ctx.fillRect(cx, cy, rBounding * 2, rBounding * 2);
+			ctx.closePath();
+			ctx.fill();
 		}
 
 		ctx.drawImage(img, 0, 0,
 					  constants.shipSpriteSrcSize, constants.shipSpriteSrcSize,
-					  cx, cy, rBounding * 2, rBounding * 2);
+					  cx - rBounding, cy - rBounding, rBounding * 2, rBounding * 2);
 		ctx.restore();
 	},
 	drawRockSprite: function(ctx, cx, cy, rBounding, thetaDeg, size) {
@@ -62,18 +65,21 @@ var drawObjects = {
 
 		ctx.save();
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.translate(cx + rBounding, cy + rBounding);
+		ctx.translate(cx, cy);
 		ctx.rotate(deg2Rad(thetaDeg + 90));
-		ctx.translate(-(cx + rBounding), -(cy + rBounding));
+		ctx.translate(-cx, -cy);
 
 		if (testBounds) {
+			ctx.beginPath();
+			ctx.arc(cx, cy, rBounding, 2 * Math.PI, false);
 			ctx.fillStyle = TEST_CANVAS_COLOR;
-			ctx.fillRect(cx, cy, rBounding * 2, rBounding * 2);
+			ctx.closePath();
+			ctx.fill();
 		}
 
 		ctx.drawImage(img, 0, 0,
 					  spriteSize, spriteSize,
-					  cx, cy, rBounding * 2, rBounding * 2);
+					  cx - rBounding, cy - rBounding, rBounding * 2, rBounding * 2);
 		ctx.restore();
 	}
 
