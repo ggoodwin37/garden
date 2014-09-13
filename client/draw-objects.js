@@ -1,7 +1,9 @@
 var imageMap = require('./image-loader.js').imageMap;
 var constants = require('./constants');
 
-var BLANK_CANVAS_COLOR = '#0c0c0c';
+var BLANK_CANVAS_COLOR = '#0c0c0c',
+	TEST_CANVAS_COLOR = '#d0d',
+	testBounds = true;
 
 var deg2Rad = require('./deg2rad');
 
@@ -24,6 +26,12 @@ var drawObjects = {
 		ctx.translate(cx + rBounding, cy + rBounding);
 		ctx.rotate(deg2Rad(thetaDeg + 90));
 		ctx.translate(-(cx + rBounding), -(cy + rBounding));
+
+		if (testBounds) {
+			ctx.fillStyle = TEST_CANVAS_COLOR;
+			ctx.fillRect(cx, cy, rBounding * 2, rBounding * 2);
+		}
+
 		ctx.drawImage(img, 0, 0,
 					  constants.shipSpriteSrcSize, constants.shipSpriteSrcSize,
 					  cx, cy, rBounding * 2, rBounding * 2);
@@ -57,6 +65,12 @@ var drawObjects = {
 		ctx.translate(cx + rBounding, cy + rBounding);
 		ctx.rotate(deg2Rad(thetaDeg + 90));
 		ctx.translate(-(cx + rBounding), -(cy + rBounding));
+
+		if (testBounds) {
+			ctx.fillStyle = TEST_CANVAS_COLOR;
+			ctx.fillRect(cx, cy, rBounding * 2, rBounding * 2);
+		}
+
 		ctx.drawImage(img, 0, 0,
 					  spriteSize, spriteSize,
 					  cx, cy, rBounding * 2, rBounding * 2);
