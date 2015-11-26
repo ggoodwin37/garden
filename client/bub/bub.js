@@ -1,5 +1,5 @@
 var interp = require('../interp');
-var drawObjects = require('./draw-objects');
+var drawObjects = require('../draw-objects');
 
 // represents an individual particle. It can update itself and be drawn.
 // delegate param is an event handler callback.
@@ -26,12 +26,12 @@ Bub.prototype.update = function(deltaMs) {
 
 Bub.prototype.onEvent = function(ev) {
 	if (this.delegate) {
-		this.delegate(ev);
+		this.delegate(this, ev);
 	}
 };
 
 Bub.prototype.draw = function(ctx) {
-	var f = this.curDur / this.maxDur;  // how far through this bub's lifetime are we? 0-1
+	var f = this.currentDur / this.maxDur;  // how far through this bub's lifetime are we? 0-1
 	var curSize = interp(this.initialSize, this.maxSize, f);
 	var curRgb = {
 		r: interp(this.initialRgb.r, this.targetRgb.r, f),

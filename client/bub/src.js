@@ -3,6 +3,7 @@
 // it can update its position to lock on to a game object (which itself may have velocity).
 // TODO: all bubsrcs act the same for now, might want to make them have unique behavior.
 var constants = require('../constants');
+var randomBipolar = require('../random-bipolar');
 var Bub = require('./bub');
 
 function BubSrc(pos) {
@@ -34,13 +35,21 @@ BubSrc.prototype.spawnBub = function() {
 		g: 0,
 		b: 1
 	};
-	var newPos = this.pos; // TODO randomize
+	var newPos = {
+		x: this.pos.x + randomBipolar(this.spawnRadius),
+		y: this.pos.y + randomBipolar(this.spawnRadius)
+	};
 	var newBub = new Bub(constants.bubDur, constants.bubSize, targetRgb, newPos, delegate);
 	this.bubList.push(newBub);
 };
 
 BubSrc.prototype.onBubEvent = function(bub, ev) {
-	// TODO
+	if (ev === 'done') {
+		var newList = this.bubList.filter(function(test) {
+			return test !== bub;
+		});
+		this.bubList = newList;
+	}
 };
 
 BubSrc.prototype.draw = function(ctx) {

@@ -27,7 +27,7 @@ function Game($canvas) {
 
 	this.bubMan = new bubMan();
 	// TODO remove
-	this.bubMan.addSrc(new bubSrc({x: this.canvasWidth / 4, y: this.canvasHeight / 4}));
+	this.bubMan.addSource(new bubSrc({x: this.canvasWidth / 4, y: this.canvasHeight / 4}));
 }
 
 Game.prototype.start = function() {

@@ -29,6 +29,6 @@ module.exports = {
 
 	bubSpawnTime: 1.0,
 	bubSpawnRadius: 10,
-	bubDur: 2,
+	bubDur: 2000,
 	bubSize: 8
 };
