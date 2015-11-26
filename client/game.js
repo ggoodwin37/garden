@@ -3,6 +3,8 @@ var Ship = require('./ship');
 var Rock = require('./rock');
 var KeyHandler = require('./key-handler');
 var drawObjects = require('./draw-objects');
+var bubMan = require('./bub/man');
+var bubSrc = require('./bub/src');
 var $ = require('jquery');
 
 var constants = require('./constants');
@@ -22,6 +24,10 @@ function Game($canvas) {
 	this.rafHandle = null;
 	this.timerTick = this.timerTick.bind(this);
 	this.lastTickTime = null;
+
+	this.bubMan = new bubMan();
+	// TODO remove
+	this.bubMan.addSrc(new bubSrc({x: this.canvasWidth / 4, y: this.canvasHeight / 4}));
 }
 
 Game.prototype.start = function() {
@@ -96,6 +102,7 @@ Game.prototype.gameLoop = function(deltaMs) {
 	this.rockList.forEach(function(thisRock) {
 		thisRock.updateRock(deltaMs);
 	});
+	this.bubMan.update(deltaMs);
 
 	// drawing
 	drawObjects.clearCtx(this.ctx);
@@ -103,6 +110,7 @@ Game.prototype.gameLoop = function(deltaMs) {
 	this.rockList.forEach(function(thisRock) {
 		thisRock.draw(self.ctx);
 	});
+	this.bubMan.drawAll(this.ctx);
 };
 
 Game.prototype.checkShipRockCollisions = function() {
