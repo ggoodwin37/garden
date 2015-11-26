@@ -81,8 +81,15 @@ var drawObjects = {
 					  spriteSize, spriteSize,
 					  cx - rBounding, cy - rBounding, rBounding * 2, rBounding * 2);
 		ctx.restore();
+	},
+	drawBub: function(ctx, pos, size, rgb) {
+		var halfSize = size / 2;
+		ctx.save();
+		ctx.fillStyle = '#ff00ff';//rgb; // TODO: convert rgb to hex string
+		ctx.rect(pos.x - halfSize, pos.y - halfSize, size, size);
+		ctx.stroke();
+		ctx.restore();
 	}
-
 };
 
 module.exports = drawObjects;
