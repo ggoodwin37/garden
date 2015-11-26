@@ -25,5 +25,10 @@ module.exports = {
 	shipSpriteSrcSize: 64,
 	rockSmallSpriteSrcSize: 32,
 	rockMediumSpriteSrcSize: 64,
-	rockLargeSpriteSrcSize: 128
+	rockLargeSpriteSrcSize: 128,
+
+	bubSpawnTime: 1.0,
+	bubSpawnRadius: 10,
+	bubDur: 2,
+	bubSize: 8
 };
