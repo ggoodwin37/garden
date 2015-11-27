@@ -36,11 +36,8 @@ BubSrc.prototype.setPos = function(newPos) {
 };
 
 BubSrc.prototype.update = function(deltaMs) {
-	if (!this.active) {
-		return;
-	}
 	this.spawnTimer += deltaMs;
-	if (this.spawnTimer >= this.config.spawnTime) {
+	if (this.active && this.spawnTimer >= this.config.spawnTime) {
 		this.spawnTimer = 0;
 		this.spawnBub();
 	}
@@ -95,9 +92,6 @@ BubSrc.prototype.onBubEvent = function(bub, ev) {
 };
 
 BubSrc.prototype.draw = function(ctx) {
-	if (!this.active) {
-		return;
-	}
 	this.bubList.forEach(function(thisBub) {
 		thisBub.draw(ctx);
 	});

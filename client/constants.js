@@ -27,7 +27,7 @@ module.exports = {
 	rockMediumSpriteSrcSize: 64,
 	rockLargeSpriteSrcSize: 128,
 
-	bubSrcConfigTest: {
+	bubSrcConfigExplode: {
 		spawnRadius: 80,
 		spawnTime: 2,
 		rgbStart1: { r: 1, g: 0, b: 0 },
@@ -37,5 +37,16 @@ module.exports = {
 		maxDur: 400,
 		maxSize: 48,
 		srcTimeToLive: 2000
+	},
+	bubSrcConfigShipThrust: {
+		spawnRadius: 10,
+		spawnTime: 10,
+		rgbStart1: { r: 0, g: 0, b: 1 },
+		rgbStart2: { r: 0, g: 0, b: 0.5 },
+		rgbEnd1: { r: 1, g: 1, b: 1 },
+		rgbEnd2: { r: 1, g: 1, b: 1 },
+		maxDur: 750,
+		maxSize: 24,
+		srcTimeToLive: 0
 	}
 };

@@ -6,6 +6,7 @@ var drawObjects = require('./draw-objects');
 var bubMan = require('./bub/man');
 var bubSrc = require('./bub/src');
 var $ = require('jquery');
+var deg2Rad = require('./deg2Rad');
 
 var constants = require('./constants');
 
@@ -26,6 +27,9 @@ function Game($canvas) {
 	this.lastTickTime = null;
 
 	this.bubMan = new bubMan();
+	this.shipThrustBubSrc = new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigShipThrust);
+	this.shipThrustBubSrc.active = false;
+	this.bubMan.addSource(this.shipThrustBubSrc);
 }
 
 Game.prototype.start = function() {
@@ -90,6 +94,7 @@ Game.prototype.gameLoop = function(deltaMs) {
 	// game logic
 	if (this.ship.state == 'alive') {
 		this.ship.updateShip(deltaMs);
+		this.updateShipThrustBubs();
 		this.checkShipRockCollisions();
 	} else if (this.ship.state == 'dead') {
 		this.ship.deadTime -= deltaMs;
@@ -109,6 +114,20 @@ Game.prototype.gameLoop = function(deltaMs) {
 		thisRock.draw(self.ctx);
 	});
 	this.bubMan.drawAll(this.ctx);
+};
+
+Game.prototype.updateShipThrustBubs = function() {
+	if (this.ship.thrustersActive) {
+		// figure out where the thrust bub src should be positioned
+		var thetaR = deg2Rad(this.ship.thetaDeg + 180);
+		var halfShipSize = constants.shipSpriteSrcSize / 2;
+		var x = this.ship.x + (Math.cos(thetaR) * halfShipSize);
+		var y = this.ship.y + (Math.sin(thetaR) * halfShipSize);
+		this.shipThrustBubSrc.setPos({x: x, y: y});
+		this.shipThrustBubSrc.active = true;
+	} else {
+		this.shipThrustBubSrc.active = false;
+	}
 };
 
 Game.prototype.checkShipRockCollisions = function() {
@@ -131,7 +150,8 @@ Game.prototype.checkShipRockCollisions = function() {
 Game.prototype.shipHitRock = function() {
 	this.ship.state = 'dead';
 	this.ship.deadTime = constants.shipDeadTimeMs;
-	this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigTest));
+	this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigExplode));
+	this.shipThrustBubSrc.active = false;
 };
 
 Game.prototype.shipReborn = function() {
