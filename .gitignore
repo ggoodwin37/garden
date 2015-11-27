@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+.DS_Store
 
 # Dependency directory
 # Deployed apps should consider commenting this line out:

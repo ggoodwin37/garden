@@ -7,6 +7,13 @@ var BLANK_CANVAS_COLOR = '#0c0c0c',
 
 var deg2Rad = require('./deg2rad');
 
+function rgbToStyleString(rgb) {
+	var r = Math.floor(rgb.r * 0xff);
+	var g = Math.floor(rgb.g * 0xff);
+	var b = Math.floor(rgb.b * 0xff);
+	return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
 var drawObjects = {
 	clearCtx: function(ctx) {
 		var w = ctx.canvas.clientWidth;
@@ -81,8 +88,14 @@ var drawObjects = {
 					  spriteSize, spriteSize,
 					  cx - rBounding, cy - rBounding, rBounding * 2, rBounding * 2);
 		ctx.restore();
+	},
+	drawBub: function(ctx, pos, size, rgb) {
+		var halfSize = size / 2;
+		ctx.save();
+		ctx.strokeStyle = rgbToStyleString(rgb);
+		ctx.strokeRect(pos.x - halfSize, pos.y - halfSize, size, size);
+		ctx.restore();
 	}
-
 };
 
 module.exports = drawObjects;
