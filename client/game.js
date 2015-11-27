@@ -26,8 +26,6 @@ function Game($canvas) {
 	this.lastTickTime = null;
 
 	this.bubMan = new bubMan();
-	// TODO remove
-	this.bubMan.addSource(new bubSrc({x: this.canvasWidth / 4, y: this.canvasHeight / 4}));
 }
 
 Game.prototype.start = function() {
@@ -133,6 +131,7 @@ Game.prototype.checkShipRockCollisions = function() {
 Game.prototype.shipHitRock = function() {
 	this.ship.state = 'dead';
 	this.ship.deadTime = constants.shipDeadTimeMs;
+	this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}));
 };
 
 Game.prototype.shipReborn = function() {

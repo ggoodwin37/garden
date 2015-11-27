@@ -31,8 +31,8 @@ BubSrc.prototype.spawnBub = function() {
 	};
 	var targetRgb = {
 		r: 1,
-		g: 1,
-		b: 1
+		g: 0,
+		b: 0
 	};
 	var randomTheta = Math.random() * 2 * Math.PI;
 	var randomRadius = Math.random() * this.spawnRadius;
