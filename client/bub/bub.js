@@ -3,17 +3,17 @@ var drawObjects = require('../draw-objects');
 
 // represents an individual particle. It can update itself and be drawn.
 // delegate param is an event handler callback.
-function Bub(maxDur, maxSize, targetRgb, pos, delegate) {
+function Bub(maxDur, maxSize, initialRgb, targetRgb, pos, delegate) {
 	// consider adding more config to this. initial color, velocity, etc.
 	this.maxDur = maxDur;
 	this.maxSize = maxSize;
+	this.initialRgb = initialRgb;
 	this.targetRgb = targetRgb;
 	this.pos = pos;
 	this.delegate = delegate;
 
 	this.currentDur = 0;
 	this.initialSize = 0;
-	this.initialRgb = {r: 0, g: 0, b: 0};
 }
 
 Bub.prototype.update = function(deltaMs) {

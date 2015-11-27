@@ -131,7 +131,7 @@ Game.prototype.checkShipRockCollisions = function() {
 Game.prototype.shipHitRock = function() {
 	this.ship.state = 'dead';
 	this.ship.deadTime = constants.shipDeadTimeMs;
-	this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}));
+	this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigTest));
 };
 
 Game.prototype.shipReborn = function() {
