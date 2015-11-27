@@ -27,8 +27,8 @@ module.exports = {
 	rockMediumSpriteSrcSize: 64,
 	rockLargeSpriteSrcSize: 128,
 
-	bubSpawnTime: 1.0,
-	bubSpawnRadius: 10,
-	bubDur: 2000,
-	bubSize: 8
+	bubSpawnTime: 10,
+	bubSpawnRadius: 64,
+	bubDur: 800,
+	bubSize: 32
 };
