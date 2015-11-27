@@ -12,7 +12,8 @@ var config = {
   rgbStart1, rgbStart2,
   rgbEnd1, rgbEnd2,
   maxDur,
-  maxSize
+  maxSize,
+  srcTimeToLive  (0 to live forever)
 */
 function BubSrc(initialPos, config) {
 	this.pos = initialPos;
@@ -20,6 +21,9 @@ function BubSrc(initialPos, config) {
 
 	this.bubList = [];
 	this.spawnTimer = 0;
+	this.srcDelegate = null;
+	this.active = true;
+	this.timeLeft = config.srcTimeToLive;
 
 	var self = this;
 	this.bubDelegate = function(bub, ev) {
@@ -32,6 +36,9 @@ BubSrc.prototype.setPos = function(newPos) {
 };
 
 BubSrc.prototype.update = function(deltaMs) {
+	if (!this.active) {
+		return;
+	}
 	this.spawnTimer += deltaMs;
 	if (this.spawnTimer >= this.config.spawnTime) {
 		this.spawnTimer = 0;
@@ -40,6 +47,12 @@ BubSrc.prototype.update = function(deltaMs) {
 	this.bubList.forEach(function(thisBub) {
 		thisBub.update(deltaMs);
 	});
+	if (this.timeLeft > 0) {
+		this.timeLeft = Math.max(0, this.timeLeft - deltaMs);
+		if (this.timeLeft === 0) {
+			this.srcDelegate && this.srcDelegate(this, 'done');
+		}
+	}
 };
 
 BubSrc.prototype.spawnBub = function() {
@@ -82,6 +95,9 @@ BubSrc.prototype.onBubEvent = function(bub, ev) {
 };
 
 BubSrc.prototype.draw = function(ctx) {
+	if (!this.active) {
+		return;
+	}
 	this.bubList.forEach(function(thisBub) {
 		thisBub.draw(ctx);
 	});

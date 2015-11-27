@@ -28,13 +28,14 @@ module.exports = {
 	rockLargeSpriteSrcSize: 128,
 
 	bubSrcConfigTest: {
-		spawnRadius: 64,
-		spawnTime: 10,
+		spawnRadius: 80,
+		spawnTime: 2,
 		rgbStart1: { r: 1, g: 0, b: 0 },
-		rgbStart2: { r: 0, g: 1, b: 0 },
+		rgbStart2: { r: 1, g: 1, b: 0 },
 		rgbEnd1: { r: 1, g: 1, b: 1 },
-		rgbEnd2: { r: 0, g: 0, b: 0 },
-		maxDur: 800,
-		maxSize: 32
+		rgbEnd2: { r: 1, g: 1, b: 1 },
+		maxDur: 400,
+		maxSize: 48,
+		srcTimeToLive: 2000
 	}
 };
