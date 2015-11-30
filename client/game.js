@@ -6,7 +6,7 @@ var drawObjects = require('./draw-objects');
 var bubMan = require('./bub/man');
 var bubSrc = require('./bub/src');
 var $ = require('jquery');
-var deg2Rad = require('./deg2Rad');
+var deg2Rad = require('./deg2rad');
 
 var constants = require('./constants');
 
