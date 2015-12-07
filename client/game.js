@@ -5,6 +5,7 @@ var KeyHandler = require('./key-handler');
 var drawObjects = require('./draw-objects');
 var bubMan = require('./bub/man');
 var bubSrc = require('./bub/src');
+var shootMan = require('./shoot-man');
 var $ = require('jquery');
 var deg2Rad = require('./deg2rad');
 
@@ -30,6 +31,8 @@ function Game($canvas) {
 	this.shipThrustBubSrc = new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigShipThrust);
 	this.shipThrustBubSrc.active = false;
 	this.bubMan.addSource(this.shipThrustBubSrc);
+
+	this.shootMan = new shootMan(this.ship);
 }
 
 Game.prototype.start = function() {
@@ -106,6 +109,7 @@ Game.prototype.gameLoop = function(deltaMs) {
 		thisRock.updateRock(deltaMs);
 	});
 	this.bubMan.update(deltaMs);
+	this.shootMan.update(deltaMs);
 
 	// drawing
 	drawObjects.clearCtx(this.ctx);
@@ -114,6 +118,7 @@ Game.prototype.gameLoop = function(deltaMs) {
 		thisRock.draw(self.ctx);
 	});
 	this.bubMan.drawAll(this.ctx);
+	this.shootMan.drawAll(this.ctx);
 };
 
 Game.prototype.updateShipThrustBubs = function() {
@@ -158,15 +163,15 @@ Game.prototype.shipReborn = function() {
 	this.createShip();
 };
 
-Game.prototype.onKeyDown = function(dir) {
-	if (dir == 'left') {
+Game.prototype.onKeyDown = function(keyString) {
+	if (keyString == 'left') {
 		this.ship.turningLeft = true;
-	} else if (dir == 'right') {
+	} else if (keyString == 'right') {
 		this.ship.turningRight = true;
-	} else if (dir == 'up') {
+	} else if (keyString == 'up') {
 		this.ship.thrustersActive = true;
-	} else if (dir == 'down') {
-		// TODO: shooting
+	} else if (keyString == 'space') {
+		this.shootMan.fire();
 	}
 };
 
