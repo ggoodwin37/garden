@@ -95,6 +95,35 @@ var drawObjects = {
 		ctx.strokeStyle = rgbToStyleString(rgb);
 		ctx.strokeRect(pos.x - halfSize, pos.y - halfSize, size, size);
 		ctx.restore();
+	},
+	drawLaserSprite: function(ctx, cx, cy, rBounding, thetaDeg, size) {
+		var spriteName = '/img/ben-laser.png';
+		var spriteSize = 15;
+		// TODO: from here down is boilerplate?
+		var img = imageMap[spriteName];
+		if (!img) {
+			console.log('error: sprite not available??');
+			return;
+		}
+
+		ctx.save();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.translate(cx, cy);
+		ctx.rotate(deg2Rad(thetaDeg + 90));
+		ctx.translate(-cx, -cy);
+
+		if (testBounds) {
+			ctx.beginPath();
+			ctx.arc(cx, cy, rBounding, 2 * Math.PI, false);
+			ctx.fillStyle = TEST_CANVAS_COLOR;
+			ctx.closePath();
+			ctx.fill();
+		}
+
+		ctx.drawImage(img, 0, 0,
+					  spriteSize, spriteSize,
+					  cx - rBounding, cy - rBounding, rBounding * 2, rBounding * 2);
+		ctx.restore();
 	}
 };
 
