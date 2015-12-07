@@ -1,6 +1,7 @@
 module.exports = {
-	'key-38': 'up',
-	'key-40': 'down',
+	'key-32': 'space',
 	'key-37': 'left',
-	'key-39': 'right'
+	'key-38': 'up',
+	'key-39': 'right',
+	'key-40': 'down'
 };
