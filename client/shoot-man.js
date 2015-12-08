@@ -6,11 +6,12 @@ var deg2Rad = require('./deg2rad');
 function ShootMan(shipRef) {
 	this.shipRef = shipRef;
     this.shots = [];
+    this.deadShots = [];
 }
 
 ShootMan.prototype.fire = function() {
     // TODO: shoot 2x lasers instead, offset from ship's position such that it looks like they're actually coming out of blasters.
-    var shot = new Shot();
+    var shot = new Shot(this);
     shot.x = this.shipRef.x;
     shot.y = this.shipRef.y;
     shot.thetaDeg = this.shipRef.thetaDeg;
@@ -20,9 +21,23 @@ ShootMan.prototype.fire = function() {
 };
 
 ShootMan.prototype.update = function(deltaMs) {
+    var self = this;
     this.shots.forEach(function(thisShot) {
         thisShot.updateShot(deltaMs);
     });
+    this.deadShots.forEach(function(thisDeadShot) {
+        var index = self.shots.indexOf(thisDeadShot);
+        if (index === -1) {
+            console.log('unexpected: didnt find dead shot.');
+            return;
+        }
+        self.shots.splice(index, 1);
+    });
+    this.deadShots = [];
+};
+
+ShootMan.prototype.onShotOffscreen = function(shot) {
+    this.deadShots.push(shot);
 };
 
 ShootMan.prototype.drawAll = function(ctx) {

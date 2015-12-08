@@ -173,8 +173,10 @@ Game.prototype.onKeyDown = function(keyString) {
 		this.ship.turningRight = true;
 	} else if (keyString == 'up') {
 		this.ship.thrustersActive = true;
-	} else if (keyString == 'space') {
-		this.shootMan.fire();
+	} else if (keyString == 'space' || keyString == 'down') {
+	    if (this.ship.state == 'alive') {
+		    this.shootMan.fire();
+        }
 	}
 };
 
