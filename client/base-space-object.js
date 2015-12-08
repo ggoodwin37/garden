@@ -14,11 +14,6 @@ var BaseSpaceObject = window.Class.extend({
 		this.vy = 0;
 		this.vTheta = 0;
 
-		// TODO: I think these are unused.
-		this.ax = 0;
-		this.ay = 0;
-		// not modelling rotational acceleration
-
 		this.r = 0;
 	},
 	update: function(deltaMs) {
@@ -26,10 +21,6 @@ var BaseSpaceObject = window.Class.extend({
 		this.x += timeFactor * this.vx;
 		this.y += timeFactor * this.vy;
 		this.thetaDeg += timeFactor * this.vTheta;
-
-		this.vx += timeFactor * this.ax;
-		this.vy += timeFactor * this.ay;
-		// TODO: maybe we just have a thrust vector and get ax and ay from theta and thrust.
 
 		this.checkWrap();
 	},
