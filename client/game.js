@@ -118,7 +118,7 @@ var Game = window.Class.extend({
 		}
 		this.rockList.forEach(function(thisRock) {
 			thisRock.update(deltaMs);
-			self.hitGrid.register(self.ship, 'rock');
+			self.hitGrid.register(thisRock, 'rock');
 		});
 		this.bubMan.update(deltaMs);
 		this.shotMan.update(deltaMs, this.hitGrid);

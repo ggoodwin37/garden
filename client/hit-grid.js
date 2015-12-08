@@ -37,8 +37,6 @@ var HitGrid = window.Class.extend({
 					var distSquared = (dx * dx) + (dy * dy);
 					var limitSquared = (hit.spaceObj.r + spaceObj.r) * (hit.spaceObj.r + spaceObj.r);
 					if (distSquared < limitSquared) {
-						console.log('uh oh, hit ship id/x/y' + spaceObj.id + ',' + spaceObj.x + ',' + spaceObj.y +
-									'  against id/x/y' + hit.spaceObj.id + ',' + hit.spaceObj.x + ',' + hit.spaceObj.y);
 						allHits.push(hit.spaceObj);
 					}
 				}
