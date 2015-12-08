@@ -1,8 +1,8 @@
 {
-	isDev: true,
+	'sDev': true,
 
-	server: {
-		port: 8080,
-		host: 'localhost'
+	'server': {
+		'port': 8080,
+		'host': 'localhost'
 	}
 }
