@@ -126,16 +126,16 @@ var Game = window.Class.extend({
 		// game logic - collision checks
 		this.checkCollisions();
 
-		// drawing
+		// drawing, back to front
 		if (!constants.sanityCheck) {
 			drawObjects.clearCtx(this.ctx);
 		}
-		this.ship.draw(this.ctx);
 		this.rockList.forEach(function(thisRock) {
 			thisRock.draw(self.ctx);
 		});
-		this.bubMan.drawAll(this.ctx);
 		this.shotMan.drawAll(this.ctx);
+		this.ship.draw(this.ctx);
+		this.bubMan.drawAll(this.ctx);
 	},
 
 	updateShipThrustBubs: function() {

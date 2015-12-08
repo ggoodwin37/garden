@@ -68,5 +68,6 @@ module.exports = {
 
     shotVel: 700,
     shotR: 8,
-	shotDebounceGapMs: 100
+	shotDebounceGapMs: 100,
+	shipShotSpacingRatio: 0.8
 };
