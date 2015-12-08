@@ -43,7 +43,7 @@ var ShotMan = window.Class.extend({
 		this.shots.forEach(function(thisShot) {
 			var rocksHittingThis = hitGrid.findHitsByType(thisShot, 'rock');
 			rocksHittingThis.forEach(function(thisRock) {
-				callback(thisRock);
+				callback(thisRock, thisShot);
 			});
 		});
 	},
@@ -51,6 +51,12 @@ var ShotMan = window.Class.extend({
 	onShotOffscreen: function(shot) {
 		this.deadShots = this.deadShots || {};
 		this.deadShots[shot.id] = true;
+	},
+
+	killShotsByMap: function(map) {
+		this.shots = this.shots.filter(function(thisShot) {
+			return !map[thisShot.id];
+		});
 	},
 
 	drawAll: function(ctx) {

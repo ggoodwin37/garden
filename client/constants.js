@@ -24,6 +24,9 @@ module.exports = {
 	numMediumRocks: 6,
 	numLargeRocks: 4,
 
+	largeRockBabies: 2,
+	mediumRockBabies: 3,
+
 	shipSpriteSrcSize: 64,
 	rockSmallSpriteSrcSize: 32,
 	rockMediumSpriteSrcSize: 64,

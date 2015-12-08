@@ -153,20 +153,27 @@ var Game = window.Class.extend({
 	},
 
 	checkCollisions: function() {
+		var self = this;
 		var rocksHittingShip = this.hitGrid.findHitsByType(this.ship, 'rock');
 		if (this.ship.state == 'alive' &&  rocksHittingShip.length > 0) {
 			this.shipHitRock();
 		}
 
 		// TODO: make this better. rocks break down, spawn bubs, etc.
-		//    also shots should probably disappear when destroying a rock
-		var tempDeadRocks = {};
-		this.shotMan.checkShotHitsOnRocks(this.rockList, this.hitGrid, function(hitRock) {
-			tempDeadRocks[hitRock.id] = true;
+		var deadThings = {};
+		var hitRocks = [];
+		this.shotMan.checkShotHitsOnRocks(this.rockList, this.hitGrid, function(hitRock, shot) {
+			hitRocks.push(hitRock);
+			deadThings[hitRock.id] = true;
+			deadThings[shot.id] = true;
 		});
 		this.rockList = this.rockList.filter(function(thisRock) {
-			return !tempDeadRocks[thisRock.id];
+			return !deadThings[thisRock.id];
 		});
+		hitRocks.forEach(function(hitRock) {
+			self.rockGotShot(hitRock);
+		});
+		this.shotMan.killShotsByMap(deadThings);
 	},
 
 	shipHitRock: function() {
@@ -174,6 +181,29 @@ var Game = window.Class.extend({
 		this.ship.deadTime = constants.shipDeadTimeMs;
 		this.bubMan.addSource(new bubSrc({x: this.ship.x, y: this.ship.y}, constants.bubSrcConfigExplode));
 		this.shipThrustBubSrc.active = false;
+	},
+
+	// do a bub and potentially spawn some smaller rocks
+	rockGotShot: function(rock) {
+		var numBabies = 0, babySize = null, i;
+		// spawn some smaller rocks
+		if (rock.size == 'large') {
+			numBabies = constants.largeRockBabies;
+			babySize = 'medium';
+		} else if (rock.size == 'medium') {
+			numBabies = constants.mediumRockBabies;
+			babySize = 'small';
+		}
+
+		var thisRock;
+		for (i = 0; i < numBabies; ++i) {
+			thisRock = new Rock(babySize);
+			thisRock.x = rock.x;
+			thisRock.y = rock.y;
+			this.rockList.push(thisRock);
+		}
+
+		// TODO: spawn bubs
 	},
 
 	shipReborn: function() {
