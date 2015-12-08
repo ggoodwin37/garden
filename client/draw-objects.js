@@ -96,7 +96,7 @@ var drawObjects = {
 		ctx.strokeRect(pos.x - halfSize, pos.y - halfSize, size, size);
 		ctx.restore();
 	},
-	drawLaserSprite: function(ctx, cx, cy, rBounding, thetaDeg, size) {
+	drawLaserSprite: function(ctx, cx, cy, rBounding, thetaDeg) {
 		var spriteName = '/img/ben-laser.png';
 		var spriteSize = 15;
 		// TODO: from here down is boilerplate?

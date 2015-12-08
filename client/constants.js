@@ -48,5 +48,7 @@ module.exports = {
 		maxDur: 750,
 		maxSize: 24,
 		srcTimeToLive: 0
-	}
+	},
+
+    shotVel: 300
 };

@@ -44,6 +44,9 @@ Game.prototype.createShip = function() {
 	ship.x = this.canvasWidth / 2;
 	ship.y = this.canvasHeight / 2;
 	this.ship = ship;
+    if (this.shootMan) {
+        this.shootMan.shipRef = this.ship;
+    }
 };
 
 Game.prototype.createRocks = function() {
