@@ -5,6 +5,7 @@ var constants = require('./constants');
 var Shot = BaseSpaceObject.extend({
 
 	init: function(shotManRef) {
+		this._super();
 		this.shotManRef = shotManRef;
 	},
 

@@ -8,6 +8,7 @@ var constants = require('./constants');
 var Rock = BaseSpaceObject.extend({
 
 	init: function (size) {
+		this._super();
 		var headingDeg = randomBipolar(180);  // heading doesn't change
 		if (size == 'small') {
 			this.r = constants.rockSmallRadius;

@@ -8,6 +8,7 @@ var constants = require('./constants');
 var Ship = BaseSpaceObject.extend({
 
 	init: function() {
+		this._super();
 		this.thrustersActive = false;
 		this.turningLeft = false;
 		this.turningRight = false;
