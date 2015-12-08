@@ -117,7 +117,9 @@ var Game = window.Class.extend({
 		this.shotMan.update(deltaMs);
 
 		// drawing
-		drawObjects.clearCtx(this.ctx);
+		if (!constants.sanityCheck) {
+			drawObjects.clearCtx(this.ctx);
+		}
 		this.ship.draw(this.ctx);
 		this.rockList.forEach(function(thisRock) {
 			thisRock.draw(self.ctx);
