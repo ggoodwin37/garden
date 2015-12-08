@@ -1,4 +1,6 @@
 module.exports = {
+	sanityCheck: false,
+
 	shipRadius: 30,
 	shipRotationalVelocity: 270,
 	shipThrust: 7,
