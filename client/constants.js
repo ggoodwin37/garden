@@ -24,6 +24,9 @@ module.exports = {
 	numMediumRocks: 6,
 	numLargeRocks: 4,
 
+	largeRockBabies: 2,
+	mediumRockBabies: 3,
+
 	shipSpriteSrcSize: 64,
 	rockSmallSpriteSrcSize: 32,
 	rockMediumSpriteSrcSize: 64,
@@ -51,7 +54,20 @@ module.exports = {
 		maxSize: 24,
 		srcTimeToLive: 0
 	},
+	bubSrcConfigRockHit: {
+		spawnRadius: 20,
+		spawnTime: 3,
+		rgbStart1: { r: 0.1, g: 0.1, b: 0.1  },
+		rgbStart2: { r: 0.4, g: 0.4, b: 0.4 },
+		rgbEnd1: { r: 0.5, g: 0.5, b: 0.5 },
+		rgbEnd2: { r: 0.9, g: 0.9, b: 0.9 },
+		maxDur: 250,
+		maxSize: 48,
+		srcTimeToLive: 500
+	},
 
     shotVel: 700,
-    shotR: 8
+    shotR: 8,
+	shotDebounceGapMs: 100,
+	shipShotSpacingRatio: 0.8
 };

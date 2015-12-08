@@ -10,13 +10,34 @@ var ShotMan = window.Class.extend({
 		this.shipRef = shipRef;
 		this.shots = [];
 		this.deadShots = null;
+		this.shotDebounce = 0;
 	},
 
 	fire: function() {
-		// TODO: shoot 2x lasers instead, offset from ship's position such that it looks like they're actually coming out of blasters.
-		var shot = new Shot(this);
-		shot.x = this.shipRef.x;
-		shot.y = this.shipRef.y;
+		if (this.shotDebounce > 0) {
+			return;  // too soon, man
+		}
+		this.shotDebounce = constants.shotDebounceGapMs;
+
+		var shot;
+		// figure out the displacement we need to space out two shots as if they are coming from the wing guns.
+		//  modify the heading by a quarter circle cuz we're going out perpendicular to ship heading.
+		var dx = this.shipRef.r * Math.cos(deg2Rad(this.shipRef.thetaDeg + 90)) * constants.shipShotSpacingRatio;
+		var dy = this.shipRef.r * Math.sin(deg2Rad(this.shipRef.thetaDeg + 90)) * constants.shipShotSpacingRatio;
+
+		// left gun
+		shot = new Shot(this);
+		shot.x = this.shipRef.x - dx;
+		shot.y = this.shipRef.y - dy;
+		shot.thetaDeg = this.shipRef.thetaDeg;
+		shot.vx = this.shipRef.vx + (constants.shotVel * Math.cos(deg2Rad(shot.thetaDeg)));
+		shot.vy = this.shipRef.vy + (constants.shotVel * Math.sin(deg2Rad(shot.thetaDeg)));
+		this.shots.push(shot);
+
+		// right gun
+		shot = new Shot(this);
+		shot.x = this.shipRef.x + dx;
+		shot.y = this.shipRef.y + dy;
 		shot.thetaDeg = this.shipRef.thetaDeg;
 		shot.vx = this.shipRef.vx + (constants.shotVel * Math.cos(deg2Rad(shot.thetaDeg)));
 		shot.vy = this.shipRef.vy + (constants.shotVel * Math.sin(deg2Rad(shot.thetaDeg)));
@@ -37,13 +58,14 @@ var ShotMan = window.Class.extend({
 		this.shots.forEach(function(thisShot) {
 			hitGrid.register(thisShot, 'shot');
 		});
+		this.shotDebounce = Math.max(0, this.shotDebounce - deltaMs);
 	},
 
 	checkShotHitsOnRocks: function(rockList, hitGrid, callback) {
 		this.shots.forEach(function(thisShot) {
 			var rocksHittingThis = hitGrid.findHitsByType(thisShot, 'rock');
 			rocksHittingThis.forEach(function(thisRock) {
-				callback(thisRock);
+				callback(thisRock, thisShot);
 			});
 		});
 	},
@@ -51,6 +73,12 @@ var ShotMan = window.Class.extend({
 	onShotOffscreen: function(shot) {
 		this.deadShots = this.deadShots || {};
 		this.deadShots[shot.id] = true;
+	},
+
+	killShotsByMap: function(map) {
+		this.shots = this.shots.filter(function(thisShot) {
+			return !map[thisShot.id];
+		});
 	},
 
 	drawAll: function(ctx) {
