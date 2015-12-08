@@ -67,5 +67,6 @@ module.exports = {
 	},
 
     shotVel: 700,
-    shotR: 8
+    shotR: 8,
+	shotDebounceGapMs: 100
 };

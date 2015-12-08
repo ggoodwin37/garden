@@ -10,9 +10,15 @@ var ShotMan = window.Class.extend({
 		this.shipRef = shipRef;
 		this.shots = [];
 		this.deadShots = null;
+		this.shotDebounce = 0;
 	},
 
 	fire: function() {
+		if (this.shotDebounce > 0) {
+			return;  // too soon, man
+		}
+		this.shotDebounce = constants.shotDebounceGapMs;
+
 		// TODO: shoot 2x lasers instead, offset from ship's position such that it looks like they're actually coming out of blasters.
 		var shot = new Shot(this);
 		shot.x = this.shipRef.x;
@@ -37,6 +43,7 @@ var ShotMan = window.Class.extend({
 		this.shots.forEach(function(thisShot) {
 			hitGrid.register(thisShot, 'shot');
 		});
+		this.shotDebounce = Math.max(0, this.shotDebounce - deltaMs);
 	},
 
 	checkShotHitsOnRocks: function(rockList, hitGrid, callback) {
