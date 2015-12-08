@@ -1,6 +1,6 @@
 module.exports = {
 	shipRadius: 30,
-	shipRotationalVelocity: 210,
+	shipRotationalVelocity: 270,
 	shipThrust: 7,
 	shipVelMax: 14,
 
@@ -48,5 +48,8 @@ module.exports = {
 		maxDur: 750,
 		maxSize: 24,
 		srcTimeToLive: 0
-	}
+	},
+
+    shotVel: 700,
+    shotR: 8
 };
