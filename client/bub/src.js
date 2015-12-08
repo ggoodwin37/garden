@@ -14,86 +14,89 @@ var config = {
   maxSize,
   srcTimeToLive  (0 to live forever)
 */
-function BubSrc(initialPos, config) {
-	this.pos = initialPos;
-	this.config = config;
+var BubSrc = window.Class.Extend({
 
-	this.bubList = [];
-	this.spawnTimer = 0;
-	this.srcDelegate = null;
-	this.active = true;
-	this.timeLeft = config.srcTimeToLive;
+	init: function(initialPos, config) {
+		this.pos = initialPos;
+		this.config = config;
 
-	var self = this;
-	this.bubDelegate = function(bub, ev) {
-		setTimeout(self.onBubEvent(bub, ev), 0);
-	};
-}
-
-BubSrc.prototype.setPos = function(newPos) {
-	this.pos = newPos;
-};
-
-BubSrc.prototype.update = function(deltaMs) {
-	this.spawnTimer += deltaMs;
-	if (this.active && this.spawnTimer >= this.config.spawnTime) {
+		this.bubList = [];
 		this.spawnTimer = 0;
-		this.spawnBub();
-	}
-	this.bubList.forEach(function(thisBub) {
-		thisBub.update(deltaMs);
-	});
-	if (this.timeLeft > 0) {
-		this.timeLeft = Math.max(0, this.timeLeft - deltaMs);
-		if (this.timeLeft === 0) {
-			this.srcDelegate && this.srcDelegate(this, 'done');
+		this.srcDelegate = null;
+		this.active = true;
+		this.timeLeft = config.srcTimeToLive;
+
+		var self = this;
+		this.bubDelegate = function(bub, ev) {
+			setTimeout(self.onBubEvent(bub, ev), 0);
+		};
+	},
+
+	setPos: function(newPos) {
+		this.pos = newPos;
+	},
+
+	update: function(deltaMs) {
+		this.spawnTimer += deltaMs;
+		if (this.active && this.spawnTimer >= this.config.spawnTime) {
+			this.spawnTimer = 0;
+			this.spawnBub();
 		}
-	}
-};
-
-BubSrc.prototype.spawnBub = function() {
-	var fRgb1 = Math.random();
-	var initialRgb = {
-		r: interp(this.config.rgbStart1.r, this.config.rgbStart2.r, fRgb1),
-		g: interp(this.config.rgbStart1.g, this.config.rgbStart2.g, fRgb1),
-		b: interp(this.config.rgbStart1.b, this.config.rgbStart2.b, fRgb1),
-	};
-	var fRgb2 = Math.random();
-	var targetRgb = {
-		r: interp(this.config.rgbEnd1.r, this.config.rgbEnd2.r, fRgb2),
-		g: interp(this.config.rgbEnd1.g, this.config.rgbEnd2.g, fRgb2),
-		b: interp(this.config.rgbEnd1.b, this.config.rgbEnd2.b, fRgb2),
-	};
-	var randomTheta = Math.random() * 2 * Math.PI;
-	var randomRadius = Math.random() * this.config.spawnRadius;
-	var dx = Math.cos(randomTheta) * randomRadius;
-	var dy = Math.sin(randomTheta) * randomRadius;
-	var newPos = {
-		x: this.pos.x + dx,
-		y: this.pos.y + dy
-	};
-	var newBub = new Bub(this.config.maxDur,
-						 this.config.maxSize,
-						 initialRgb,
-						 targetRgb,
-						 newPos,
-						 this.bubDelegate);
-	this.bubList.push(newBub);
-};
-
-BubSrc.prototype.onBubEvent = function(bub, ev) {
-	if (ev === 'done') {
-		var newList = this.bubList.filter(function(test) {
-			return test !== bub;
+		this.bubList.forEach(function(thisBub) {
+			thisBub.update(deltaMs);
 		});
-		this.bubList = newList;
-	}
-};
+		if (this.timeLeft > 0) {
+			this.timeLeft = Math.max(0, this.timeLeft - deltaMs);
+			if (this.timeLeft === 0) {
+				this.srcDelegate && this.srcDelegate(this, 'done');
+			}
+		}
+	},
 
-BubSrc.prototype.draw = function(ctx) {
-	this.bubList.forEach(function(thisBub) {
-		thisBub.draw(ctx);
-	});
-};
+	spawnBub: function() {
+		var fRgb1 = Math.random();
+		var initialRgb = {
+			r: interp(this.config.rgbStart1.r, this.config.rgbStart2.r, fRgb1),
+			g: interp(this.config.rgbStart1.g, this.config.rgbStart2.g, fRgb1),
+			b: interp(this.config.rgbStart1.b, this.config.rgbStart2.b, fRgb1),
+		};
+		var fRgb2 = Math.random();
+		var targetRgb = {
+			r: interp(this.config.rgbEnd1.r, this.config.rgbEnd2.r, fRgb2),
+			g: interp(this.config.rgbEnd1.g, this.config.rgbEnd2.g, fRgb2),
+			b: interp(this.config.rgbEnd1.b, this.config.rgbEnd2.b, fRgb2),
+		};
+		var randomTheta = Math.random() * 2 * Math.PI;
+		var randomRadius = Math.random() * this.config.spawnRadius;
+		var dx = Math.cos(randomTheta) * randomRadius;
+		var dy = Math.sin(randomTheta) * randomRadius;
+		var newPos = {
+			x: this.pos.x + dx,
+			y: this.pos.y + dy
+		};
+		var newBub = new Bub(this.config.maxDur,
+							 this.config.maxSize,
+							 initialRgb,
+							 targetRgb,
+							 newPos,
+							 this.bubDelegate);
+		this.bubList.push(newBub);
+	},
+
+	onBubEvent: function(bub, ev) {
+		if (ev === 'done') {
+			var newList = this.bubList.filter(function(test) {
+				return test !== bub;
+			});
+			this.bubList = newList;
+		}
+	},
+
+	draw: function(ctx) {
+		this.bubList.forEach(function(thisBub) {
+			thisBub.draw(ctx);
+		});
+	}
+});
 
 module.exports = BubSrc;
