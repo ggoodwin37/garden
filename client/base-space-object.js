@@ -1,5 +1,9 @@
+var uid = require('./uid');
+
 // TODO: consider using a class helper.
 function BaseSpaceObject() {
+	this.id = uid();
+
 	this.x = 0;
 	this.y = 0;
 	this.thetaDeg = 0;
