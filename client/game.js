@@ -110,7 +110,6 @@ var Game = window.Class.extend({
 			this.ship.update(deltaMs);
 			this.hitGrid.register(this.ship, 'ship');
 			this.updateShipThrustBubs();
-			this.checkShipRockCollisions();
 		} else if (this.ship.state == 'dead') {
 			this.ship.deadTime -= deltaMs;
 			if (this.ship.deadTime <= 0) {
@@ -119,13 +118,14 @@ var Game = window.Class.extend({
 		}
 		this.rockList.forEach(function(thisRock) {
 			thisRock.update(deltaMs);
-			this.hitGrid.register(this.ship, 'rock');
+			self.hitGrid.register(self.ship, 'rock');
 		});
 		this.bubMan.update(deltaMs);
 		this.shotMan.update(deltaMs, this.hitGrid);
 
 		// game logic - collision checks
-		if (this.ship.state == 'alive' && this.hitGrid.findHitsByType(this.ship, 'rock')) {
+		var rocksHittingShip = this.hitGrid.findHitsByType(this.ship, 'rock');
+		if (this.ship.state == 'alive' &&  rocksHittingShip.length > 0) {
 			this.shipHitRock();
 		}
 		// TODO: check shot collisions

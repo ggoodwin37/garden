@@ -35,8 +35,10 @@ var HitGrid = window.Class.extend({
 					var dx = hit.spaceObj.x - spaceObj.x;
 					var dy = hit.spaceObj.y - spaceObj.y;
 					var distSquared = (dx * dx) + (dy * dy);
-					var limitSquared = (hit.spaceObj.r + hit.spaceObj.r) * (spaceObj.r + spaceObj.r);
+					var limitSquared = (hit.spaceObj.r + spaceObj.r) * (hit.spaceObj.r + spaceObj.r);
 					if (distSquared < limitSquared) {
+						console.log('uh oh, hit ship id/x/y' + spaceObj.id + ',' + spaceObj.x + ',' + spaceObj.y +
+									'  against id/x/y' + hit.spaceObj.id + ',' + hit.spaceObj.x + ',' + hit.spaceObj.y);
 						allHits.push(hit.spaceObj);
 					}
 				}
@@ -47,15 +49,15 @@ var HitGrid = window.Class.extend({
 
 	_doForAllOverlappingSquares: function(spaceObj, cb) {
 		var xMin = Math.floor((spaceObj.x - spaceObj.r) / chunkSize),
-			xMax = Math.ceil((spaceObj.x + spaceObj.r) / chunkSize),
+			xMax = Math.floor((spaceObj.x + spaceObj.r) / chunkSize),
 			yMin = Math.floor((spaceObj.y - spaceObj.r) / chunkSize),
-			yMax = Math.ceil((spaceObj.y + spaceObj.r) / chunkSize);
+			yMax = Math.floor((spaceObj.y + spaceObj.r) / chunkSize);
 		var i, j, keyString, list;
 		for (j = yMin; j <= yMax; ++j) {
 			for (i = xMin; i <= xMax; ++i) {
 				keyString = '' + i + ',' + j;
 				list = this.cache[keyString];
-				if (list) {
+				if (!list) {
 					list = this.cache[keyString] = [];
 				}
 				cb(list);
