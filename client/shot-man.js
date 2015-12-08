@@ -3,7 +3,7 @@ var Shot = require('./shot');
 var constants = require('./constants');
 var deg2Rad = require('./deg2rad');
 
-var ShotMan = window.Class.Extend({
+var ShotMan = window.Class.extend({
 
 	init: function(shipRef) {
 		this.shipRef = shipRef;
@@ -25,7 +25,7 @@ var ShotMan = window.Class.Extend({
 	update: function(deltaMs) {
 		var self = this;
 		this.shots.forEach(function(thisShot) {
-			thisShot.updateShot(deltaMs);
+			thisShot.update(deltaMs);
 		});
 		if (this.deadShots) {
 			this.shots = this.shots.filter(function(thisShot) {

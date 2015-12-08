@@ -14,7 +14,7 @@ var config = {
   maxSize,
   srcTimeToLive  (0 to live forever)
 */
-var BubSrc = window.Class.Extend({
+var BubSrc = window.Class.extend({
 
 	init: function(initialPos, config) {
 		this.pos = initialPos;

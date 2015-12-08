@@ -3,7 +3,7 @@ var drawObjects = require('../draw-objects');
 
 // represents an individual particle. It can update itself and be drawn.
 // delegate param is an event handler callback.
-var Bub = window.Class.Extend({
+var Bub = window.Class.extend({
 
 	init: function(maxDur, maxSize, initialRgb, targetRgb, pos, delegate) {
 		// consider adding more config to this. initial color, velocity, etc.

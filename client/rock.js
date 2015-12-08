@@ -5,7 +5,7 @@ var drawObjects = require('./draw-objects');
 
 var constants = require('./constants');
 
-var Rock = BaseSpaceObject.Extend({
+var Rock = BaseSpaceObject.extend({
 
 	init: function (size) {
 		var headingDeg = randomBipolar(180);  // heading doesn't change

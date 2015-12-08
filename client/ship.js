@@ -5,7 +5,7 @@ var drawObjects = require('./draw-objects');
 
 var constants = require('./constants');
 
-var Ship = BaseSpaceObject.Extend({
+var Ship = BaseSpaceObject.extend({
 
 	init: function() {
 		this.thrustersActive = false;

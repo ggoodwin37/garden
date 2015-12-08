@@ -1,6 +1,6 @@
 // Bub is the basic particle system in this game.
 //  BubMan manages a list of BubSrc's, each of which own their own individual Bubs.
-var BubMan = window.Class.Extend({
+var BubMan = window.Class.extend({
 
 	init: function() {
 		this.srcList = [];

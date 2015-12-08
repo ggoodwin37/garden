@@ -2,7 +2,7 @@ var BaseSpaceObject = require('./base-space-object');
 var drawObjects = require('./draw-objects');
 var constants = require('./constants');
 
-var Shot = BaseSpaceObject.Extend({
+var Shot = BaseSpaceObject.extend({
 
 	init: function(shotManRef) {
 		this.shotManRef = shotManRef;

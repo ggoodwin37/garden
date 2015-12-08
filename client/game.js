@@ -101,7 +101,7 @@ var Game = window.Class.extend({
 
 		// game logic
 		if (this.ship.state == 'alive') {
-			this.ship.updateShip(deltaMs);
+			this.ship.update(deltaMs);
 			this.updateShipThrustBubs();
 			this.checkShipRockCollisions();
 		} else if (this.ship.state == 'dead') {
@@ -111,7 +111,7 @@ var Game = window.Class.extend({
 			}
 		}
 		this.rockList.forEach(function(thisRock) {
-			thisRock.updateRock(deltaMs);
+			thisRock.update(deltaMs);
 		});
 		this.bubMan.update(deltaMs);
 		this.shotMan.update(deltaMs);
