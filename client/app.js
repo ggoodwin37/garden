@@ -1,3 +1,5 @@
+require('./class')();
+
 var domready = require('domready');
 var MainView = require('./main-view');
 var loadImages = require('./image-loader').imageLoader;
