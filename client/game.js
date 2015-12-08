@@ -124,11 +124,7 @@ var Game = window.Class.extend({
 		this.shotMan.update(deltaMs, this.hitGrid);
 
 		// game logic - collision checks
-		var rocksHittingShip = this.hitGrid.findHitsByType(this.ship, 'rock');
-		if (this.ship.state == 'alive' &&  rocksHittingShip.length > 0) {
-			this.shipHitRock();
-		}
-		// TODO: check shot collisions
+		this.checkCollisions();
 
 		// drawing
 		if (!constants.sanityCheck) {
@@ -154,6 +150,23 @@ var Game = window.Class.extend({
 		} else {
 			this.shipThrustBubSrc.active = false;
 		}
+	},
+
+	checkCollisions: function() {
+		var rocksHittingShip = this.hitGrid.findHitsByType(this.ship, 'rock');
+		if (this.ship.state == 'alive' &&  rocksHittingShip.length > 0) {
+			this.shipHitRock();
+		}
+
+		// TODO: make this better. rocks break down, spawn bubs, etc.
+		//    also shots should probably disappear when destroying a rock
+		var tempDeadRocks = {};
+		this.shotMan.checkShotHitsOnRocks(this.rockList, this.hitGrid, function(hitRock) {
+			tempDeadRocks[hitRock.id] = true;
+		});
+		this.rockList = this.rockList.filter(function(thisRock) {
+			return !tempDeadRocks[thisRock.id];
+		});
 	},
 
 	shipHitRock: function() {

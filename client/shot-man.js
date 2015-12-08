@@ -5,6 +5,7 @@ var deg2Rad = require('./deg2rad');
 
 var ShotMan = window.Class.extend({
 
+	// TODO: limit number of shots.
 	init: function(shipRef) {
 		this.shipRef = shipRef;
 		this.shots = [];
@@ -35,6 +36,15 @@ var ShotMan = window.Class.extend({
 		}
 		this.shots.forEach(function(thisShot) {
 			hitGrid.register(thisShot, 'shot');
+		});
+	},
+
+	checkShotHitsOnRocks: function(rockList, hitGrid, callback) {
+		this.shots.forEach(function(thisShot) {
+			var rocksHittingThis = hitGrid.findHitsByType(thisShot, 'rock');
+			rocksHittingThis.forEach(function(thisRock) {
+				callback(thisRock);
+			});
 		});
 	},
 
