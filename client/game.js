@@ -185,8 +185,8 @@ var Game = window.Class.extend({
 
 	// do a bub and potentially spawn some smaller rocks
 	rockGotShot: function(rock) {
-		var numBabies = 0, babySize = null, i;
 		// spawn some smaller rocks
+		var numBabies = 0, babySize = null, i;
 		if (rock.size == 'large') {
 			numBabies = constants.largeRockBabies;
 			babySize = 'medium';
@@ -203,7 +203,9 @@ var Game = window.Class.extend({
 			this.rockList.push(thisRock);
 		}
 
-		// TODO: spawn bubs
+		// spawn a bub
+		// TODO: consider having different configs for different rock sizes, so big rocks make bigger splashes.
+		this.bubMan.addSource(new bubSrc({x: rock.x, y: rock.y}, constants.bubSrcConfigRockHit));
 	},
 
 	shipReborn: function() {
