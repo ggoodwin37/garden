@@ -8,6 +8,7 @@ var bubSrc = require('./bub/src');
 var shotMan = require('./shot-man');
 var $ = require('jquery');
 var deg2Rad = require('./deg2rad');
+var HitGrid = require('./hit-grid');
 
 var constants = require('./constants');
 
@@ -21,6 +22,8 @@ var Game = window.Class.extend({
 		this.ctx = $canvas.get(0).getContext('2d');
 		this.canvasWidth = $canvas.width();
 		this.canvasHeight = $canvas.height();
+
+		this.hitGrid = new HitGrid(this.canvasWidth, this.canvasHeight);
 
 		this.createShip();
 		this.createRocks();
@@ -99,11 +102,14 @@ var Game = window.Class.extend({
 	gameLoop: function(deltaMs) {
 		var self = this;
 
-		// game logic
+		// locations of everything get cached here throughout 'state update' phase
+		this.hitGrid.clear();
+
+		// game logic - state update
 		if (this.ship.state == 'alive') {
 			this.ship.update(deltaMs);
+			this.hitGrid.register(this.ship, 'ship');
 			this.updateShipThrustBubs();
-			this.checkShipRockCollisions();
 		} else if (this.ship.state == 'dead') {
 			this.ship.deadTime -= deltaMs;
 			if (this.ship.deadTime <= 0) {
@@ -112,9 +118,13 @@ var Game = window.Class.extend({
 		}
 		this.rockList.forEach(function(thisRock) {
 			thisRock.update(deltaMs);
+			self.hitGrid.register(thisRock, 'rock');
 		});
 		this.bubMan.update(deltaMs);
-		this.shotMan.update(deltaMs);
+		this.shotMan.update(deltaMs, this.hitGrid);
+
+		// game logic - collision checks
+		this.checkCollisions();
 
 		// drawing
 		if (!constants.sanityCheck) {
@@ -142,20 +152,20 @@ var Game = window.Class.extend({
 		}
 	},
 
-	checkShipRockCollisions: function() {
-		var self = this;
+	checkCollisions: function() {
+		var rocksHittingShip = this.hitGrid.findHitsByType(this.ship, 'rock');
+		if (this.ship.state == 'alive' &&  rocksHittingShip.length > 0) {
+			this.shipHitRock();
+		}
 
-		// for now, do a brute-force check. later we can improve this by using a grid or something.
-		// also, this doesn't handle collisions around the edges correctly.
-		this.rockList.forEach(function(thisRock) {
-			var dx = thisRock.x - self.ship.x;
-			var dy = thisRock.y - self.ship.y;
-			var distSquared = (dx * dx) + (dy * dy);
-			var limitSquared = (thisRock.r + self.ship.r) * (thisRock.r + self.ship.r);
-			if (distSquared < limitSquared) {
-				self.shipHitRock();
-				return;
-			}
+		// TODO: make this better. rocks break down, spawn bubs, etc.
+		//    also shots should probably disappear when destroying a rock
+		var tempDeadRocks = {};
+		this.shotMan.checkShotHitsOnRocks(this.rockList, this.hitGrid, function(hitRock) {
+			tempDeadRocks[hitRock.id] = true;
+		});
+		this.rockList = this.rockList.filter(function(thisRock) {
+			return !tempDeadRocks[thisRock.id];
 		});
 	},
 

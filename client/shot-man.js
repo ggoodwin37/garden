@@ -5,6 +5,7 @@ var deg2Rad = require('./deg2rad');
 
 var ShotMan = window.Class.extend({
 
+	// TODO: limit number of shots.
 	init: function(shipRef) {
 		this.shipRef = shipRef;
 		this.shots = [];
@@ -22,18 +23,29 @@ var ShotMan = window.Class.extend({
 		this.shots.push(shot);
 	},
 
-	update: function(deltaMs) {
+	update: function(deltaMs, hitGrid) {
 		var self = this;
 		this.shots.forEach(function(thisShot) {
 			thisShot.update(deltaMs);
 		});
 		if (this.deadShots) {
 			this.shots = this.shots.filter(function(thisShot) {
-				console.log('testing shot with id=' + thisShot.id);
 				return !self.deadShots[thisShot.id];
 			});
 			this.deadShots = null;
 		}
+		this.shots.forEach(function(thisShot) {
+			hitGrid.register(thisShot, 'shot');
+		});
+	},
+
+	checkShotHitsOnRocks: function(rockList, hitGrid, callback) {
+		this.shots.forEach(function(thisShot) {
+			var rocksHittingThis = hitGrid.findHitsByType(thisShot, 'rock');
+			rocksHittingThis.forEach(function(thisRock) {
+				callback(thisRock);
+			});
+		});
 	},
 
 	onShotOffscreen: function(shot) {
