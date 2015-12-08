@@ -50,6 +50,6 @@ module.exports = {
 		srcTimeToLive: 0
 	},
 
-    shotVel: 800,
-    shotR: 6
+    shotVel: 700,
+    shotR: 8
 };
