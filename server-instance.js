@@ -3,8 +3,18 @@ var config = require('getconfig');
 // var inspect = require('eyes').inspector({maxLength: null});
 
 function startServerInstance(done) {
-	var port = config.server.port;
-	var host = config.server.host;
+	// when running under c9 environment, we need to pull these values from env.
+	// when running locally, fall back to config.
+	var port = process.env.PORT;
+	var host = process.env.IP;
+	if (!port) {
+		console.log('no port defined in env, using config instead.');
+		port = config.server.port;
+	}
+	if (!host) {
+		console.log('no host defined in env, using config instead.');
+		host = config.server.host;
+	}
 	var server = new hapi.Server(port, host, {
 		// not using any server views right now.
 		// views: {
