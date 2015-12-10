@@ -1,21 +1,21 @@
 {
-  "name": "benterprise",
+  "name": "garden",
   "version": "0.0.0",
-  "description": "Space game",
+  "description": "Ecology sim",
   "main": "index.js",
   "scripts": {
     "test": "jshint . && exit 0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ggoodwin37/benterprise.git"
+    "url": "https://github.com/ggoodwin37/garden.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ggoodwin37/benterprise/issues"
+    "url": "https://github.com/ggoodwin37/garden/issues"
   },
-  "homepage": "https://github.com/ggoodwin37/benterprise",
+  "homepage": "https://github.com/ggoodwin37/garden",
   "dependencies": {
     "ampersand-view": "^6.0.11",
     "async": "^0.9.0",

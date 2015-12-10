@@ -50,20 +50,9 @@ function startServerInstance(done) {
 	server.pack.register(serverPackList, function (err) {
 		if (err) throw err;
 		server.start(function () {
-			console.log('benterprise is running at', server.info.uri);
+			console.log('garden is running at', server.info.uri);
 			done && done(server);
 		});
-	});
-
-	// static files
-	server.route({
-		method: 'GET',
-		path: '/img/{filename*}',
-		handler: {
-			directory: {
-				path: 'img'
-			}
-		}
 	});
 	return server;
 }

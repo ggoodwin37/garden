@@ -1,7 +1,7 @@
-benterprise
+The Garden of Life and Death
 ===========
 
-Space game with node/js/canvas
+A simple ecology sim.
 
 ## TODOs
 - gulp less automatically
