@@ -1,8 +1,7 @@
-var $ = require('jquery');
+//var $ = require('jquery');
 var raf = require('raf');
-var drawObjects = require('./draw-objects');
-var deg2Rad = require('./deg2rad');
-var constants = require('./constants');
+var drawLib = require('./draw-lib');
+//var constants = require('./constants');
 
 var Game = window.Class.extend({
 
@@ -41,6 +40,7 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
+		drawLib.clearCtx(this.ctx);
 	}
 
 });
