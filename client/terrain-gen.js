@@ -20,6 +20,7 @@ function make2dArray(width, height) {
 }
 
 function avgVal(values) {
+	// TODO: bug here, seeing nulls in the values array for east and south, this shouldn't be happening
 	if (!values || !values.length) return 0;
 	return values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
 }
@@ -36,12 +37,14 @@ function getDelta(dim) {
 function diamond(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	var xMin = xOffs, xMax = xOffs + dim - 1, yMin = yOffs, yMax = yOffs + dim - 1;
+	var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
+		yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
 	values.push(map[xMin][yMin]);
 	values.push(map[xMax][yMin]);
 	values.push(map[xMin][yMax]);
 	values.push(map[xMax][yMax]);
-	map[xOffs + delta][yOffs + delta] = calcTargetVal(values, dim, map.length);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareNorth(map, xOffs, yOffs, dim) {
@@ -56,6 +59,7 @@ function squareNorth(map, xOffs, yOffs, dim) {
 		values.push(map[xMid][yTop]);
 	}
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareEast(map, xOffs, yOffs, dim) {
@@ -65,11 +69,15 @@ function squareEast(map, xOffs, yOffs, dim) {
 		yTop = yOffs, yMid = yOffs + delta, yBottom = yOffs + dim - 1;
 	values.push(map[xMid][yTop]);
 	if (xRight < map.length) {
+		if (map[xRight][yMid] === null) {
+			console.log('error: pulling null for East from ' + xRight + ',' + yMid);
+		}
 		values.push(map[xRight][yMid]);
 	}
 	values.push(map[xMid][yBottom]);
 	values.push(map[xLeft][yMid]);
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareSouth(map, xOffs, yOffs, dim) {
@@ -79,11 +87,15 @@ function squareSouth(map, xOffs, yOffs, dim) {
 		yTop = yOffs + delta, yMid = yOffs + dim - 1, yBottom = yMid + delta;
 	values.push(map[xRight][yMid]);
 	if (yBottom < map[0].length) {
+		if (map[xMid][yBottom] === null) {
+			console.log('error: pulling null for South from ' + xMid + ',' + yBottom);
+		}
 		values.push(map[xMid][yBottom]);
 	}
 	values.push(map[xLeft][yMid]);
 	values.push(map[xMid][yTop]);
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareWest(map, xOffs, yOffs, dim) {
@@ -98,6 +110,7 @@ function squareWest(map, xOffs, yOffs, dim) {
 		values.push(map[xLeft][yMid]);
 	}
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 // recurse function for the terrain generator
