@@ -19,19 +19,19 @@ var Game = window.Class.extend({
 	},
 
 	testTerrain: function() {
-		var dim = 9;
+		var dim = 129;
 		var width = dim, height = dim;
 		var map = terrainGen(width, height);
 
-		var i, j, str;
-		console.log('dumping map ----');
-		for (i = 0; i < width; ++i) {
-			str = '';
-			for (j = 0; j < height; ++j) {
-				str += '' + map[i][j] + ',';
-			}
-			console.log(str);
-		}
+		// var i, j, str;
+		// console.log('dumping map ----');
+		// for (i = 0; i < width; ++i) {
+		// 	str = '';
+		// 	for (j = 0; j < height; ++j) {
+		// 		str += '' + map[i][j] + ',';
+		// 	}
+		// 	console.log(str);
+		// }
 
 		drawLib.drawMap(this.ctx, map);
 	},

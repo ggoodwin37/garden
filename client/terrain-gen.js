@@ -24,79 +24,88 @@ function avgVal(values) {
 	return values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
 }
 
-// recurse function for the terrain generator
-function recurseGen(map, xOffs, yOffs, dim) {
-	var values, targetVal;
-	var delta = Math.floor(dim / 2);
-	console.log('recurseGen coords. xoffs=' + xOffs + ' yoffs=' + yOffs + ' dim=' + dim + ' delta=' + delta);
+function calcTargetVal(values, dim, max) {
+	// TODO: use dim and max to come up with a scaled random offset here
+	return avgVal(values);
+}
 
-	// diamond step: set center to average of four corners
-	values = [];
+function getDelta(dim) {
+	return Math.floor(dim / 2);
+}
+
+function diamondStep(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
 	values.push(map[xOffs][yOffs]);
 	values.push(map[xOffs + dim - 1][yOffs]);
 	values.push(map[xOffs][yOffs + dim -1]);
 	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
-	targetVal = avgVal(values);
-	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs + delta][yOffs + delta] = targetVal;
+	map[xOffs + delta][yOffs + delta] = calcTargetVal(values, dim, map.length);
+}
 
-	// square step: set 4 center points of the diamonds to average of corners.
-	// Our desired corner points can be outside the input dims (and potentially outside the map)
-
-	// north
-	values = [];
+function squareNorth(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
 	values.push(map[xOffs][yOffs]);
 	values.push(map[xOffs + delta][yOffs + delta]);
 	values.push(map[xOffs + dim - 1][yOffs]);
 	if (yOffs - delta >= 0) {
 		values.push(map[xOffs + delta][yOffs - delta]);
 	}
-	targetVal = avgVal(values);
-	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs + delta][yOffs] = targetVal;
+	map[xOffs + delta][yOffs] = calcTargetVal(values, dim, map.length);
+}
 
-	// east
-	values = [];
+function squareEast(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
 	values.push(map[xOffs + dim - 1][yOffs]);
 	if (xOffs + dim - 1 + delta < map.length) {
 		values.push(map[xOffs + dim - 1 + delta][yOffs + delta]);
 	}
 	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
 	values.push(map[xOffs + delta][yOffs + delta]);
-	targetVal = avgVal(values);
-	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs + dim - 1][yOffs + delta] = targetVal;
+	map[xOffs + dim - 1][yOffs + delta] = calcTargetVal(values, dim, map.length);
+}
 
-	// south
-	values = [];
+function squareSouth(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
 	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
 	if (yOffs + dim - 1 + delta < map[0].length) {
 		values.push(map[xOffs + delta][yOffs + dim - 1 + delta]);
 	}
 	values.push(map[xOffs][yOffs + dim - 1]);
 	values.push(map[xOffs + delta][yOffs + delta]);
-	targetVal = avgVal(values);
-	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs + delta][yOffs + dim - 1] = targetVal;
+	map[xOffs + delta][yOffs + dim - 1] = calcTargetVal(values, dim, map.length);
+}
 
-	// west
-	values = [];
+function squareWest(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
 	values.push(map[xOffs][yOffs]);
 	values.push(map[xOffs + delta][yOffs + delta]);
 	values.push(map[xOffs][yOffs + dim - 1]);
 	if (xOffs - delta >= 0) {
 		values.push(map[xOffs - delta][yOffs + delta]);
 	}
-	targetVal = avgVal(values);
-	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs][yOffs + delta] = targetVal;
+	map[xOffs][yOffs + delta] = calcTargetVal(values, dim, map.length);
+}
 
-	if (delta < 3) return;
+// recurse function for the terrain generator
+function recurseGen(map, xOffs, yOffs, dim) {
+	if (dim < 3) return;
 
-	recurseGen(map, xOffs, yOffs, delta);
-	recurseGen(map, xOffs + delta + 1, yOffs, delta);
-	recurseGen(map, xOffs, yOffs + delta + 1, delta);
-	recurseGen(map, xOffs + delta + 1, yOffs + delta + 1, delta);
+	diamondStep(map, xOffs, yOffs, dim);
+	squareNorth(map, xOffs, yOffs, dim);
+	squareEast(map, xOffs, yOffs, dim);
+	squareSouth(map, xOffs, yOffs, dim);
+	squareWest(map, xOffs, yOffs, dim);
+
+	var delta = getDelta(dim);
+	recurseGen(map, xOffs, yOffs, delta + 1);
+	recurseGen(map, xOffs + delta, yOffs, delta + 1);
+	recurseGen(map, xOffs, yOffs + delta, delta + 1);
+	recurseGen(map, xOffs + delta, yOffs + delta, delta + 1);
 }
 
 // uses diamond-square algorithm to generate a heightmap square.
