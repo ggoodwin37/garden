@@ -35,7 +35,7 @@ var drawLib = {
 				if (val === null) {
 					rgb = {r: 1, g: 0, b: 1};
 				} else {
-					rgb = {r: 0, g: val, b: 0};
+					rgb = {r: val, g: val, b: val};
 				}
 				ctx.fillStyle = rgbToStyleString(rgb);
 				ctx.fillRect(Math.floor(i * blockW),

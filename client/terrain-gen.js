@@ -33,69 +33,78 @@ function getDelta(dim) {
 	return Math.floor(dim / 2);
 }
 
-function diamondStep(map, xOffs, yOffs, dim) {
+function diamond(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	values.push(map[xOffs][yOffs]);
-	values.push(map[xOffs + dim - 1][yOffs]);
-	values.push(map[xOffs][yOffs + dim -1]);
-	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
+	var xMin = xOffs, xMax = xOffs + dim - 1, yMin = yOffs, yMax = yOffs + dim - 1;
+	values.push(map[xMin][yMin]);
+	values.push(map[xMax][yMin]);
+	values.push(map[xMin][yMax]);
+	values.push(map[xMax][yMax]);
 	map[xOffs + delta][yOffs + delta] = calcTargetVal(values, dim, map.length);
 }
 
 function squareNorth(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	values.push(map[xOffs][yOffs]);
-	values.push(map[xOffs + delta][yOffs + delta]);
-	values.push(map[xOffs + dim - 1][yOffs]);
-	if (yOffs - delta >= 0) {
-		values.push(map[xOffs + delta][yOffs - delta]);
+	var xLeft = xOffs, xMid = xOffs + delta, xRight = xOffs + dim - 1,
+		yTop = yOffs - delta, yMid = yOffs, yBottom = yOffs + delta;
+	values.push(map[xLeft][yMid]);
+	values.push(map[xRight][yMid]);
+	values.push(map[xMid][yBottom]);
+	if (yTop >= 0) {
+		values.push(map[xMid][yTop]);
 	}
-	map[xOffs + delta][yOffs] = calcTargetVal(values, dim, map.length);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
 function squareEast(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	values.push(map[xOffs + dim - 1][yOffs]);
-	if (xOffs + dim - 1 + delta < map.length) {
-		values.push(map[xOffs + dim - 1 + delta][yOffs + delta]);
+	var xLeft = xOffs + delta, xMid = xOffs + dim - 1, xRight = xMid + delta,
+		yTop = yOffs, yMid = yOffs + delta, yBottom = yOffs + dim - 1;
+	values.push(map[xMid][yTop]);
+	if (xRight < map.length) {
+		values.push(map[xRight][yMid]);
 	}
-	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
-	values.push(map[xOffs + delta][yOffs + delta]);
-	map[xOffs + dim - 1][yOffs + delta] = calcTargetVal(values, dim, map.length);
+	values.push(map[xMid][yBottom]);
+	values.push(map[xLeft][yMid]);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
 function squareSouth(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
-	if (yOffs + dim - 1 + delta < map[0].length) {
-		values.push(map[xOffs + delta][yOffs + dim - 1 + delta]);
+	var xLeft = xOffs, xMid = xOffs + delta, xRight = xOffs + dim - 1,
+		yTop = yOffs + delta, yMid = yOffs + dim - 1, yBottom = yMid + delta;
+	values.push(map[xRight][yMid]);
+	if (yBottom < map[0].length) {
+		values.push(map[xMid][yBottom]);
 	}
-	values.push(map[xOffs][yOffs + dim - 1]);
-	values.push(map[xOffs + delta][yOffs + delta]);
-	map[xOffs + delta][yOffs + dim - 1] = calcTargetVal(values, dim, map.length);
+	values.push(map[xLeft][yMid]);
+	values.push(map[xMid][yTop]);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
 function squareWest(map, xOffs, yOffs, dim) {
 	var values = [];
 	var delta = getDelta(dim);
-	values.push(map[xOffs][yOffs]);
-	values.push(map[xOffs + delta][yOffs + delta]);
-	values.push(map[xOffs][yOffs + dim - 1]);
-	if (xOffs - delta >= 0) {
-		values.push(map[xOffs - delta][yOffs + delta]);
+	var xLeft = xOffs - delta, xMid = xOffs, xRight = xOffs + delta,
+		yTop = yOffs, yMid = yOffs + delta, yBottom = yOffs + dim - 1;
+	values.push(map[xMid][yTop]);
+	values.push(map[xRight][yMid]);
+	values.push(map[xMid][yBottom]);
+	if (xLeft >= 0) {
+		values.push(map[xLeft][yMid]);
 	}
-	map[xOffs][yOffs + delta] = calcTargetVal(values, dim, map.length);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
 // recurse function for the terrain generator
 function recurseGen(map, xOffs, yOffs, dim) {
 	if (dim < 3) return;
 
-	diamondStep(map, xOffs, yOffs, dim);
+	diamond(map, xOffs, yOffs, dim);
 	squareNorth(map, xOffs, yOffs, dim);
 	squareEast(map, xOffs, yOffs, dim);
 	squareSouth(map, xOffs, yOffs, dim);
@@ -116,10 +125,14 @@ function generateTerrain(width, height) {
 	var map = make2dArray(dim, dim);
 
 	// initial values in corners
-	map[0][0] = Math.random();
-	map[0][dim - 1] = Math.random();
-	map[dim - 1][0] = Math.random();
-	map[dim - 1][dim - 1] = Math.random();
+	map[0][0] = 0;
+	map[0][dim - 1] = 0;
+	map[dim - 1][0] = 1;
+	map[dim - 1][dim - 1] = 1;
+	// map[0][0] = Math.random();
+	// map[0][dim - 1] = Math.random();
+	// map[dim - 1][0] = Math.random();
+	// map[dim - 1][dim - 1] = Math.random();
 	recurseGen(map, 0, 0, dim);
 	return map;
 }
