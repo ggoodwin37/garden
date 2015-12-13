@@ -19,9 +19,11 @@ var Game = window.Class.extend({
 	},
 
 	testTerrain: function() {
-		var width = 9, height = 9;
-		var i, j, str;
+		var dim = 9;
+		var width = dim, height = dim;
 		var map = terrainGen(width, height);
+
+		var i, j, str;
 		console.log('dumping map ----');
 		for (i = 0; i < width; ++i) {
 			str = '';
@@ -30,6 +32,8 @@ var Game = window.Class.extend({
 			}
 			console.log(str);
 		}
+
+		drawLib.drawMap(this.ctx, map);
 	},
 
 	start: function() {
@@ -57,7 +61,7 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-		drawLib.clearCtx(this.ctx);
+//		drawLib.clearCtx(this.ctx);
 	}
 
 });

@@ -86,12 +86,12 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs][yOffs + delta] = targetVal;
 
-	if (delta < 1) return;
+	if (delta < 3) return;
 
 	recurseGen(map, xOffs, yOffs, delta);
-	recurseGen(map, xOffs + delta, yOffs, delta);
-	recurseGen(map, xOffs, yOffs + delta, delta);
-	recurseGen(map, xOffs + delta, yOffs + delta, delta);
+	recurseGen(map, xOffs + delta + 1, yOffs, delta);
+	recurseGen(map, xOffs, yOffs + delta + 1, delta);
+	recurseGen(map, xOffs + delta + 1, yOffs + delta + 1, delta);
 }
 
 // uses diamond-square algorithm to generate a heightmap square.
@@ -110,4 +110,19 @@ function generateTerrain(width, height) {
 	return map;
 }
 
+// fill a map with a linear gradient to test drawing funcs
+// function generateTestTerrain(width, height) {
+// 	var dim = getNextBinarySize(Math.max(width, height));
+// 	console.log('dim is ' + dim);
+// 	var map = make2dArray(dim, dim);
+// 	var i, j;
+// 	for (i = 0; i < dim; ++i) {
+// 		for (j = 0; j < dim; ++j) {
+// 			map[i][j] = ((i * dim) + j) / (dim * dim);
+// 		}
+// 	}
+// 	return map;
+// }
+
 module.exports = generateTerrain;
+//module.exports = generateTestTerrain;
