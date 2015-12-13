@@ -19,6 +19,11 @@ function make2dArray(width, height) {
 	return result;
 }
 
+function avgVal(values) {
+	if (!values || !values.length) return 0;
+	return values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+}
+
 // recurse function for the terrain generator
 function recurseGen(map, xOffs, yOffs, dim) {
 	var values, targetVal;
@@ -31,7 +36,7 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	values.push(map[xOffs + dim - 1][yOffs]);
 	values.push(map[xOffs][yOffs + dim -1]);
 	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
-	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+	targetVal = avgVal(values);
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs + delta][yOffs + delta] = targetVal;
 
@@ -46,7 +51,7 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	if (yOffs - delta >= 0) {
 		values.push(map[xOffs + delta][yOffs - delta]);
 	}
-	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+	targetVal = avgVal(values);
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs + delta][yOffs] = targetVal;
 
@@ -58,7 +63,7 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	}
 	values.push(map[xOffs + dim - 1][yOffs + dim - 1]);
 	values.push(map[xOffs + delta][yOffs + delta]);
-	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+	targetVal = avgVal(values);
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs + dim - 1][yOffs + delta] = targetVal;
 
@@ -70,7 +75,7 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	}
 	values.push(map[xOffs][yOffs + dim - 1]);
 	values.push(map[xOffs + delta][yOffs + delta]);
-	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+	targetVal = avgVal(values);
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs + delta][yOffs + dim - 1] = targetVal;
 
@@ -82,7 +87,7 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	if (xOffs - delta >= 0) {
 		values.push(map[xOffs - delta][yOffs + delta]);
 	}
-	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
+	targetVal = avgVal(values);
 	// TODO: scaled bipolar random value added to targetVal
 	map[xOffs][yOffs + delta] = targetVal;
 
