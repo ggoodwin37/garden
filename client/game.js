@@ -2,6 +2,7 @@
 var raf = require('raf');
 var drawLib = require('./draw-lib');
 //var constants = require('./constants');
+var terrainGen = require('./terrain-gen');
 
 var Game = window.Class.extend({
 
@@ -13,6 +14,22 @@ var Game = window.Class.extend({
 		this.rafHandle = null;
 		this.timerTick = this.timerTick.bind(this);
 		this.lastTickTime = null;
+
+		this.testTerrain();
+	},
+
+	testTerrain: function() {
+		var width = 9, height = 9;
+		var i, j, str;
+		var map = terrainGen(width, height);
+		console.log('dumping map ----');
+		for (i = 0; i < width; ++i) {
+			str = '';
+			for (j = 0; j < height; ++j) {
+				str += '' + map[i][j] + ',';
+			}
+			console.log(str);
+		}
 	},
 
 	start: function() {

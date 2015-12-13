@@ -12,7 +12,7 @@ function make2dArray(width, height) {
 	while (result.length < width) {
 		row = [];
 		while (row.length < height) {
-			row.push(0);
+			row.push(null);
 		}
 		result.push(row);
 	}
@@ -23,6 +23,7 @@ function make2dArray(width, height) {
 function recurseGen(map, xOffs, yOffs, dim) {
 	var values, targetVal;
 	var delta = Math.floor(dim / 2);
+	console.log('recurseGen coords. xoffs=' + xOffs + ' yoffs=' + yOffs + ' dim=' + dim + ' delta=' + delta);
 
 	// diamond step: set center to average of four corners
 	values = [];
@@ -83,9 +84,14 @@ function recurseGen(map, xOffs, yOffs, dim) {
 	}
 	targetVal = values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
 	// TODO: scaled bipolar random value added to targetVal
-	map[xOffs - delta][yOffs + delta] = targetVal;
+	map[xOffs][yOffs + delta] = targetVal;
 
-	// TODO: recurse
+	if (delta < 1) return;
+
+	recurseGen(map, xOffs, yOffs, delta);
+	recurseGen(map, xOffs + delta, yOffs, delta);
+	recurseGen(map, xOffs, yOffs + delta, delta);
+	recurseGen(map, xOffs + delta, yOffs + delta, delta);
 }
 
 // uses diamond-square algorithm to generate a heightmap square.
