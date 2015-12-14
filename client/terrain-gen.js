@@ -1,3 +1,5 @@
+var constants = require('./constants');
+
 // return smallest integer of form (2^n + 1) that is greater than or equal to x
 function getNextBinarySize(x) {
 	var n = 0;
@@ -25,8 +27,10 @@ function avgVal(values) {
 }
 
 function calcTargetVal(values, dim, max) {
-	// TODO: use dim and max to come up with a scaled random offset here
-	return avgVal(values);
+	// random offset is scaled by our current resolution
+	var factor = constants.terrainSmoothing * dim / max;
+	var randomOffset = (2 * Math.random() * factor) - (factor);
+	return Math.max(Math.min(1, avgVal(values) + randomOffset), 0);
 }
 
 function getDelta(dim) {

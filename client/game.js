@@ -69,7 +69,7 @@ var Game = window.Class.extend({
 	},
 
 	testTerrain: function() {
-		var dim = 65;
+		var dim = 257;
 		var width = dim, height = dim;
 		var map = terrainGen(width, height);
 
