@@ -20,10 +20,7 @@ function make2dArray(width, height) {
 }
 
 function avgVal(values) {
-	// TODO: bug here, seeing nulls in the values array for east and south, this shouldn't be happening
 	if (!values || !values.length) return 0;
-	// TODO: this is a bandaid. The real fix is to interleave all square, diamond steps rather than recursing by quadrant.
-	values = values.filter(function(thisVal) { return thisVal !== null; });
 	return values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
 }
 
@@ -46,7 +43,6 @@ function diamond(map, xOffs, yOffs, dim) {
 	values.push(map[xMin][yMax]);
 	values.push(map[xMax][yMax]);
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareNorth(map, xOffs, yOffs, dim) {
@@ -61,7 +57,6 @@ function squareNorth(map, xOffs, yOffs, dim) {
 		values.push(map[xMid][yTop]);
 	}
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareEast(map, xOffs, yOffs, dim) {
@@ -71,15 +66,11 @@ function squareEast(map, xOffs, yOffs, dim) {
 		yTop = yOffs, yMid = yOffs + delta, yBottom = yOffs + dim - 1;
 	values.push(map[xMid][yTop]);
 	if (xRight < map.length) {
-		if (map[xRight][yMid] === null) {
-			console.log('error: pulling null for East from ' + xRight + ',' + yMid);
-		}
 		values.push(map[xRight][yMid]);
 	}
 	values.push(map[xMid][yBottom]);
 	values.push(map[xLeft][yMid]);
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareSouth(map, xOffs, yOffs, dim) {
@@ -89,15 +80,11 @@ function squareSouth(map, xOffs, yOffs, dim) {
 		yTop = yOffs + delta, yMid = yOffs + dim - 1, yBottom = yMid + delta;
 	values.push(map[xRight][yMid]);
 	if (yBottom < map[0].length) {
-		if (map[xMid][yBottom] === null) {
-			console.log('error: pulling null for South from ' + xMid + ',' + yBottom);
-		}
 		values.push(map[xMid][yBottom]);
 	}
 	values.push(map[xLeft][yMid]);
 	values.push(map[xMid][yTop]);
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	console.log('set val at ' + xMid + ',' + yMid);
 }
 
 function squareWest(map, xOffs, yOffs, dim) {
@@ -112,24 +99,13 @@ function squareWest(map, xOffs, yOffs, dim) {
 		values.push(map[xLeft][yMid]);
 	}
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	console.log('set val at ' + xMid + ',' + yMid);
 }
 
-// recurse function for the terrain generator
-function recurseGen(map, xOffs, yOffs, dim) {
-	if (dim < 3) return;
-
-	diamond(map, xOffs, yOffs, dim);
+function square(map, xOffs, yOffs, dim) {
 	squareNorth(map, xOffs, yOffs, dim);
 	squareEast(map, xOffs, yOffs, dim);
 	squareSouth(map, xOffs, yOffs, dim);
 	squareWest(map, xOffs, yOffs, dim);
-
-	var delta = getDelta(dim);
-	recurseGen(map, xOffs, yOffs, delta + 1);
-	recurseGen(map, xOffs + delta, yOffs, delta + 1);
-	recurseGen(map, xOffs, yOffs + delta, delta + 1);
-	recurseGen(map, xOffs + delta, yOffs + delta, delta + 1);
 }
 
 // uses diamond-square algorithm to generate a heightmap square.
@@ -152,7 +128,33 @@ function generateTerrain(width, height) {
 		map[dim - 1][0] = Math.random();
 		map[dim - 1][dim - 1] = Math.random();
 	}
-	recurseGen(map, 0, 0, dim);
+
+	// can't use recursion here, because we have to do all diamond steps
+	// at a given resolution before starting the square steps.
+	var step = dim, resolution = 1;
+	var i, j, xOffs, yOffs;
+	while (step >= 3) {
+		yOffs = 0;
+		for (i = 0; i < resolution; ++i) {
+			xOffs = 0;
+			for (j = 0; j < resolution; ++j) {
+				diamond(map, xOffs, yOffs, step);
+				xOffs += step - 1;
+			}
+			yOffs += step - 1;
+		}
+		yOffs = 0;
+		for (i = 0; i < resolution; ++i) {
+			xOffs = 0;
+			for (j = 0; j < resolution; ++j) {
+				square(map, xOffs, yOffs, step);
+				xOffs += step - 1;
+			}
+			yOffs += step - 1;
+		}
+		step = Math.floor(step / 2) + 1;
+		resolution *= 2;
+	}
 	return map;
 }
 
