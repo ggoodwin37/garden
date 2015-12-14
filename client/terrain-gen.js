@@ -159,18 +159,18 @@ function generateTerrain(width, height) {
 }
 
 // fill a map with a linear gradient to test drawing funcs
-// function generateTestTerrain(width, height) {
-// 	var dim = getNextBinarySize(Math.max(width, height));
-// 	console.log('dim is ' + dim);
-// 	var map = make2dArray(dim, dim);
-// 	var i, j;
-// 	for (i = 0; i < dim; ++i) {
-// 		for (j = 0; j < dim; ++j) {
-// 			map[i][j] = ((i * dim) + j) / (dim * dim);
-// 		}
-// 	}
-// 	return map;
-// }
+function generateTestTerrain(width, height) {
+	var dim = getNextBinarySize(Math.max(width, height));
+	console.log('dim is ' + dim);
+	var map = make2dArray(dim, dim);
+	var i, j;
+	for (i = 0; i < dim; ++i) {
+		for (j = 0; j < dim; ++j) {
+			map[i][j] = ((i * dim) + j) / (dim * dim);
+		}
+	}
+	return map;
+}
 
-module.exports = generateTerrain;
-//module.exports = generateTestTerrain;
+var testTerrain = false;
+module.exports = testTerrain ? generateTestTerrain : generateTerrain;

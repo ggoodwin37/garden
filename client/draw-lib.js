@@ -18,11 +18,10 @@ var drawLib = {
 	},
 
 	// takes a 2d map with each value between 0,1 and maps that into the context
-	// TODO: support gradients. right now just using a fixed simple gradient
 	// this implementation assumes that the context device size will be bigger
 	// than the map's resolution, so we'll scale it using fillRect. There are
 	// probably more efficient ways to do this if we aren't scaling up.
-	drawMap: function(ctx, map) {
+	drawMap: function(ctx, map, gradient) {
 		var w = ctx.canvas.clientWidth;
 		var h = ctx.canvas.clientHeight;
 		var blockW = w / map.length;
@@ -35,7 +34,7 @@ var drawLib = {
 				if (val === null) {
 					rgb = {r: 1, g: 0, b: 1};
 				} else {
-					rgb = {r: val, g: val, b: val};
+					rgb = gradient.getRgbForValue(val);
 				}
 				ctx.fillStyle = rgbToStyleString(rgb);
 				ctx.fillRect(Math.floor(i * blockW),

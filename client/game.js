@@ -3,6 +3,7 @@ var raf = require('raf');
 var drawLib = require('./draw-lib');
 //var constants = require('./constants');
 var terrainGen = require('./terrain-gen');
+var Gradient = require('./gradient');
 
 var Game = window.Class.extend({
 
@@ -15,6 +16,55 @@ var Game = window.Class.extend({
 		this.timerTick = this.timerTick.bind(this);
 		this.lastTickTime = null;
 
+		this.gradient = new Gradient();
+		this.gradient.addStop({
+			val: 0.2,
+			r: 0.0,
+			g: 0.0,
+			b: 1.0
+		});
+		this.gradient.addStop({
+			val: 0.3,
+			r: 1.0,
+			g: 0.0,
+			b: 0.1
+		});
+		this.gradient.addStop({
+			val: 0.4,
+			r: 0.8,
+			g: 0.7,
+			b: 0.2
+		});
+		this.gradient.addStop({
+			val: 0.5,
+			r: 0.3,
+			g: 0.0,
+			b: 0.7
+		});
+		this.gradient.addStop({
+			val: 0.6,
+			r: 0.3,
+			g: 0.0,
+			b: 0.5
+		});
+		this.gradient.addStop({
+			val: 0.7,
+			r: 0.8,
+			g: 0.8,
+			b: 1.0
+		});
+		this.gradient.addStop({
+			val: 0.8,
+			r: 1.0,
+			g: 1.0,
+			b: 0.0
+		});
+		this.gradient.addStop({
+			val: 0.95,
+			r: 1,
+			g: 1,
+			b: 1
+		});
 		this.testTerrain();
 	},
 
@@ -33,7 +83,7 @@ var Game = window.Class.extend({
 		// 	console.log(str);
 		// }
 
-		drawLib.drawMap(this.ctx, map);
+		drawLib.drawMap(this.ctx, map, this.gradient);
 	},
 
 	start: function() {
