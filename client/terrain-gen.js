@@ -22,6 +22,8 @@ function make2dArray(width, height) {
 function avgVal(values) {
 	// TODO: bug here, seeing nulls in the values array for east and south, this shouldn't be happening
 	if (!values || !values.length) return 0;
+	// TODO: this is a bandaid. The real fix is to interleave all square, diamond steps rather than recursing by quadrant.
+	values = values.filter(function(thisVal) { return thisVal !== null; });
 	return values.reduce(function(prev, cur) { return prev + cur; }, 0) / values.length;
 }
 
@@ -138,14 +140,18 @@ function generateTerrain(width, height) {
 	var map = make2dArray(dim, dim);
 
 	// initial values in corners
-	map[0][0] = 0;
-	map[0][dim - 1] = 0;
-	map[dim - 1][0] = 1;
-	map[dim - 1][dim - 1] = 1;
-	// map[0][0] = Math.random();
-	// map[0][dim - 1] = Math.random();
-	// map[dim - 1][0] = Math.random();
-	// map[dim - 1][dim - 1] = Math.random();
+	var fixedCorners = false;
+	if (fixedCorners) {
+		map[0][0] = 0;
+		map[0][dim - 1] = 0;
+		map[dim - 1][0] = 1;
+		map[dim - 1][dim - 1] = 1;
+	} else {
+		map[0][0] = Math.random();
+		map[0][dim - 1] = Math.random();
+		map[dim - 1][0] = Math.random();
+		map[dim - 1][dim - 1] = Math.random();
+	}
 	recurseGen(map, 0, 0, dim);
 	return map;
 }
