@@ -162,7 +162,7 @@ function generateTerrain(width, height) {
 	return map;
 }
 
-// fill a map with a linear gradient to test drawing funcs
+// fill a map with a linear gradient to test drawing funcs/gradients
 function generateTestTerrain(width, height) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	console.log('dim is ' + dim);
@@ -176,5 +176,5 @@ function generateTestTerrain(width, height) {
 	return map;
 }
 
-var testTerrain = false;
+var testTerrain = true;
 module.exports = testTerrain ? generateTestTerrain : generateTerrain;
