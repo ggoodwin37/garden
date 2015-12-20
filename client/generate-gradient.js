@@ -9,17 +9,20 @@ function helper(grad, val, r, g, b) {
 	});
 }
 
+function helperHex(grad, valByte, rByte, gByte, bByte) {
+	helper(grad, valByte / 0xff, rByte / 0xff, gByte / 0xff, bByte / 0xff);
+}
+
 var generateGradient = {
 	landscape: function() {
 		var grad = new Gradient();
-		helper(grad, 0.2, 0.0, 0.0, 1.0);
-		helper(grad, 0.3, 1.0, 0.0, 0.1);
-		helper(grad, 0.4, 0.8, 0.7, 0.2);
-		helper(grad, 0.5, 0.3, 0.0, 0.7);
-		helper(grad, 0.6, 0.3, 0.0, 0.5);
-		helper(grad, 0.7, 0.8, 0.8, 1.0);
-		helper(grad, 0.8, 1.0, 1.0, 0.0);
-		helper(grad, 0.95, 1, 1, 1);
+		helperHex(grad, 50, 29, 48, 112);
+		helperHex(grad, 55, 57, 88, 163);
+		helperHex(grad, 62, 229, 200, 124);
+		helperHex(grad, 130, 108, 115, 59);
+		helperHex(grad, 180, 59, 85, 12);
+		helperHex(grad, 235, 105, 83, 42);
+		helperHex(grad, 255, 218, 219, 224);
 		return grad;
 	}
 };

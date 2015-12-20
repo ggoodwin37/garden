@@ -176,5 +176,5 @@ function generateTestTerrain(width, height) {
 	return map;
 }
 
-var testTerrain = true;
+var testTerrain = false;
 module.exports = testTerrain ? generateTestTerrain : generateTerrain;
