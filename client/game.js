@@ -21,20 +21,8 @@ var Game = window.Class.extend({
 	},
 
 	testTerrain: function() {
-		var dim = 257;
-		var width = dim, height = dim;
-		var map = terrainGen(width, height);
-
-		// var i, j, str;
-		// console.log('dumping map ----');
-		// for (i = 0; i < width; ++i) {
-		// 	str = '';
-		// 	for (j = 0; j < height; ++j) {
-		// 		str += '' + map[i][j] + ',';
-		// 	}
-		// 	console.log(str);
-		// }
-
+		var downsampleFactor = 1;
+		var map = terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor);
 		drawLib.drawMap(this.ctx, map, this.gradient);
 	},
 

@@ -112,9 +112,26 @@ function square(map, xOffs, yOffs, dim) {
 	squareWest(map, xOffs, yOffs, dim);
 }
 
+function trimMap(map, width, height) {
+	if (width > map.length || height > map[0].length) {
+		console.log('trimMap: bad size');
+		return map;
+	}
+
+	var trimmedMap = [];
+	var i, j;
+	for (i = 0; i < width; ++i) {
+		trimmedMap.push([]);
+		for (j = 0; j < height; ++j) {
+			trimmedMap[i].push(map[i][j]);
+		}
+	}
+	return trimmedMap;
+}
+
 // uses diamond-square algorithm to generate a heightmap square.
 // since the algorithm needs a square of size 2^n+1, we'll generate the smallest map that fits width,height,
-// then trim out the desired size, OR map into the desired size, that might work too.
+// then trim out the desired size.
 function generateTerrain(width, height) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
@@ -159,7 +176,7 @@ function generateTerrain(width, height) {
 		step = Math.floor(step / 2) + 1;
 		resolution *= 2;
 	}
-	return map;
+	return trimMap(map, width, height);
 }
 
 // fill a map with a linear gradient to test drawing funcs/gradients
