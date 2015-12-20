@@ -1,4 +1,5 @@
 var constants = require('./constants');
+var ChunkyTaskList = require('./chunky-task-list');
 
 // return smallest integer of form (2^n + 1) that is greater than or equal to x
 function getNextBinarySize(x) {
@@ -37,16 +38,18 @@ function getDelta(dim) {
 	return Math.floor(dim / 2);
 }
 
-function diamond(map, xOffs, yOffs, dim) {
-	var values = [];
-	var delta = getDelta(dim);
-	var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
-		yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
-	values.push(map[xMin][yMin]);
-	values.push(map[xMax][yMin]);
-	values.push(map[xMin][yMax]);
-	values.push(map[xMax][yMax]);
-	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+function diamond(map, xOffs, yOffs, dim, taskList) {
+	taskList.add(function() {
+		var values = [];
+		var delta = getDelta(dim);
+		var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
+			yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
+		values.push(map[xMin][yMin]);
+		values.push(map[xMax][yMin]);
+		values.push(map[xMin][yMax]);
+		values.push(map[xMax][yMax]);
+		map[xMid][yMid] = calcTargetVal(values, dim, map.length);
+	});
 }
 
 function squareNorth(map, xOffs, yOffs, dim) {
@@ -105,11 +108,13 @@ function squareWest(map, xOffs, yOffs, dim) {
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
-function square(map, xOffs, yOffs, dim) {
-	squareNorth(map, xOffs, yOffs, dim);
-	squareEast(map, xOffs, yOffs, dim);
-	squareSouth(map, xOffs, yOffs, dim);
-	squareWest(map, xOffs, yOffs, dim);
+function square(map, xOffs, yOffs, dim, taskList) {
+	taskList.add(function() {
+		squareNorth(map, xOffs, yOffs, dim);
+		squareEast(map, xOffs, yOffs, dim);
+		squareSouth(map, xOffs, yOffs, dim);
+		squareWest(map, xOffs, yOffs, dim);
+	});
 }
 
 function trimMap(map, width, height) {
@@ -132,9 +137,11 @@ function trimMap(map, width, height) {
 // uses diamond-square algorithm to generate a heightmap square.
 // since the algorithm needs a square of size 2^n+1, we'll generate the smallest map that fits width,height,
 // then trim out the desired size.
-function generateTerrain(width, height) {
+// queueing up the actual work here so can avoid blocking UI thread for too long.
+function generateTerrain(width, height, cb) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
+	var taskList = new ChunkyTaskList();
 
 	// initial values in corners
 	var fixedCorners = false;
@@ -159,7 +166,7 @@ function generateTerrain(width, height) {
 		for (i = 0; i < resolution; ++i) {
 			xOffs = 0;
 			for (j = 0; j < resolution; ++j) {
-				diamond(map, xOffs, yOffs, step);
+				diamond(map, xOffs, yOffs, step, taskList);
 				xOffs += step - 1;
 			}
 			yOffs += step - 1;
@@ -168,7 +175,7 @@ function generateTerrain(width, height) {
 		for (i = 0; i < resolution; ++i) {
 			xOffs = 0;
 			for (j = 0; j < resolution; ++j) {
-				square(map, xOffs, yOffs, step);
+				square(map, xOffs, yOffs, step, taskList);
 				xOffs += step - 1;
 			}
 			yOffs += step - 1;
@@ -176,21 +183,27 @@ function generateTerrain(width, height) {
 		step = Math.floor(step / 2) + 1;
 		resolution *= 2;
 	}
-	return trimMap(map, width, height);
+	taskList.execute(function() {
+		cb(trimMap(map, width, height));
+	}, function(cur, tot) {
+		console.log('generate map progress: ' + Math.round(100 * cur / tot) + '%');
+	});
 }
 
 // fill a map with a linear gradient to test drawing funcs/gradients
-function generateTestTerrain(width, height) {
-	var dim = getNextBinarySize(Math.max(width, height));
-	console.log('dim is ' + dim);
-	var map = make2dArray(dim, dim);
-	var i, j;
-	for (i = 0; i < dim; ++i) {
-		for (j = 0; j < dim; ++j) {
-			map[i][j] = ((i * dim) + j) / (dim * dim);
+function generateTestTerrain(width, height, cb) {
+	window.setTimeout(function() {
+		var dim = getNextBinarySize(Math.max(width, height));
+		console.log('dim is ' + dim);
+		var map = make2dArray(dim, dim);
+		var i, j;
+		for (i = 0; i < dim; ++i) {
+			for (j = 0; j < dim; ++j) {
+				map[i][j] = ((i * dim) + j) / (dim * dim);
+			}
 		}
-	}
-	return map;
+		cb(map);
+	}, 1);
 }
 
 var testTerrain = false;
