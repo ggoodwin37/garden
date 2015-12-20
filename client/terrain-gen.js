@@ -141,7 +141,7 @@ function trimMap(map, width, height) {
 function generateTerrain(width, height, cb) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
-	var taskList = new ChunkyTaskList();
+	var taskList = new ChunkyTaskList(50000);
 
 	// initial values in corners
 	var fixedCorners = false;
@@ -186,7 +186,7 @@ function generateTerrain(width, height, cb) {
 	taskList.execute(function() {
 		cb(trimMap(map, width, height));
 	}, function(cur, tot) {
-		console.log('generate map progress: ' + Math.round(100 * cur / tot) + '%');
+		console.log('generate map progress: ' + cur + ' of ' + tot);
 	});
 }
 

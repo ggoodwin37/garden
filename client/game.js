@@ -21,9 +21,11 @@ var Game = window.Class.extend({
 	},
 
 	testTerrain: function() {
+		var self = this;
 		var downsampleFactor = 1;
-		var map = terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor);
-		drawLib.drawMap(this.ctx, map, this.gradient);
+		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
+			drawLib.drawMap(self.ctx, map, self.gradient);
+		});
 	},
 
 	start: function() {

@@ -1,8 +1,7 @@
 // a little helper that runs a list of synchronous tasks in chunks.
-var CHUNK_SIZE = 100;
-
 var ChunkyTaskList = window.Class.extend({
-	init: function() {
+	init: function(chunkSize) {
+		this.chunkSize = chunkSize;
 		this.taskList = [];
 	},
 	add: function(step) {
@@ -15,11 +14,12 @@ var ChunkyTaskList = window.Class.extend({
 		function next() {
 			var i;
 			var taskList = [];
-			for (i = 0; i < CHUNK_SIZE; ++i) {
+			for (i = 0; i < self.chunkSize; ++i) {
 				if (self.taskList.length === 0) {
 					break;
 				}
 				taskList.push(self.taskList.shift());
+				console.log('pushed a task, ' + self.taskList.length + ' remaining');
 			}
 			window.setTimeout(function() {
 				taskList.forEach(function(task) {
