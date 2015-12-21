@@ -41,19 +41,6 @@ var drawLib = {
 							 Math.ceil(blockH));
 			}
 		}
-	},
-
-	drawTest: function(ctx, cx, cy) {
-		var rBounding = 30;
-		var color = '#ff00ff';
-		ctx.save();
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.beginPath();
-		ctx.arc(cx, cy, rBounding, 2 * Math.PI, false);
-		ctx.fillStyle = color;
-		ctx.closePath();
-		ctx.fill();
-		ctx.restore();
 	}
 };
 

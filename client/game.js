@@ -54,30 +54,9 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-		// lazy init test obj data
-		if (this.testX === undefined) {
-			this.testX = this.canvasWidth / 2;
-		}
-		if (this.testY === undefined) {
-			this.testY = this.canvasHeight / 2;
-		}
-		if (this.testV === undefined) {
-			this.testV = {
-				x: 500,
-				y: 125
-			};
-		}
-		// update test obj
-		this.testX += (this.testV.x * deltaMs / 1000);
-		this.testY += (this.testV.y * deltaMs / 1000);
-		while (this.testX < 0) this.testX += this.canvasWidth;
-		while (this.testY < 0) this.testY += this.canvasHeight;
-		while (this.testX > this.canvasWidth) this.testX -= this.canvasWidth;
-		while (this.testY > this.canvasHeight) this.testY -= this.canvasHeight;
-
-		// draw time
-		drawLib.clearCtx(this.fgCtx);
-		drawLib.drawTest(this.fgCtx, this.testX, this.testY);
+		// update
+		// draw
+		//drawLib.clearCtx(this.fgCtx);
 	}
 
 });
