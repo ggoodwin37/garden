@@ -1,4 +1,5 @@
 var constants = require('./constants');
+var ChunkyTaskList = require('./chunky-task-list');
 
 // return smallest integer of form (2^n + 1) that is greater than or equal to x
 function getNextBinarySize(x) {
@@ -112,12 +113,31 @@ function square(map, xOffs, yOffs, dim) {
 	squareWest(map, xOffs, yOffs, dim);
 }
 
+function trimMap(map, width, height) {
+	if (width > map.length || height > map[0].length) {
+		console.log('trimMap: bad size');
+		return map;
+	}
+
+	var trimmedMap = [];
+	var i, j;
+	for (i = 0; i < width; ++i) {
+		trimmedMap.push([]);
+		for (j = 0; j < height; ++j) {
+			trimmedMap[i].push(map[i][j]);
+		}
+	}
+	return trimmedMap;
+}
+
 // uses diamond-square algorithm to generate a heightmap square.
 // since the algorithm needs a square of size 2^n+1, we'll generate the smallest map that fits width,height,
-// then trim out the desired size, OR map into the desired size, that might work too.
-function generateTerrain(width, height) {
+// then trim out the desired size.
+// queueing up the actual work here so can avoid blocking UI thread for too long.
+function generateTerrain(width, height, cb) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
+	var taskList = new ChunkyTaskList(1);
 
 	// initial values in corners
 	var fixedCorners = false;
@@ -133,47 +153,59 @@ function generateTerrain(width, height) {
 		map[dim - 1][dim - 1] = Math.random();
 	}
 
+	// this is the chunk of work that gets done for each grid resolution
+	function stepTask(step, resolution) {
+		return function() {
+			var i, j, xOffs, yOffs;
+			yOffs = 0;
+			for (i = 0; i < resolution; ++i) {
+				xOffs = 0;
+				for (j = 0; j < resolution; ++j) {
+					diamond(map, xOffs, yOffs, step);
+					xOffs += step - 1;
+				}
+				yOffs += step - 1;
+			}
+			yOffs = 0;
+			for (i = 0; i < resolution; ++i) {
+				xOffs = 0;
+				for (j = 0; j < resolution; ++j) {
+					square(map, xOffs, yOffs, step);
+					xOffs += step - 1;
+				}
+				yOffs += step - 1;
+			}
+		};
+	}
+
 	// can't use recursion here, because we have to do all diamond steps
 	// at a given resolution before starting the square steps.
-	var step = dim, resolution = 1;
-	var i, j, xOffs, yOffs;
-	while (step >= 3) {
-		yOffs = 0;
-		for (i = 0; i < resolution; ++i) {
-			xOffs = 0;
-			for (j = 0; j < resolution; ++j) {
-				diamond(map, xOffs, yOffs, step);
-				xOffs += step - 1;
-			}
-			yOffs += step - 1;
-		}
-		yOffs = 0;
-		for (i = 0; i < resolution; ++i) {
-			xOffs = 0;
-			for (j = 0; j < resolution; ++j) {
-				square(map, xOffs, yOffs, step);
-				xOffs += step - 1;
-			}
-			yOffs += step - 1;
-		}
-		step = Math.floor(step / 2) + 1;
-		resolution *= 2;
+	var stepDim = dim, stepResolution = 1;
+	while (stepDim >= 3) {
+		taskList.add(stepTask(stepDim, stepResolution));
+		stepDim = Math.floor(stepDim / 2) + 1;
+		stepResolution *= 2;
 	}
-	return map;
+	taskList.execute(function() {
+		cb(trimMap(map, width, height));
+	}, function(cur, tot) {
+		console.log('generate map progress: ' + cur + ' of ' + tot);
+	});
 }
 
-// fill a map with a linear gradient to test drawing funcs
-function generateTestTerrain(width, height) {
-	var dim = getNextBinarySize(Math.max(width, height));
-	console.log('dim is ' + dim);
-	var map = make2dArray(dim, dim);
-	var i, j;
-	for (i = 0; i < dim; ++i) {
-		for (j = 0; j < dim; ++j) {
-			map[i][j] = ((i * dim) + j) / (dim * dim);
+// fill a map with a linear gradient to test drawing funcs/gradients
+function generateTestTerrain(width, height, cb) {
+	window.setTimeout(function() {
+		var dim = getNextBinarySize(Math.max(width, height));
+		var map = make2dArray(dim, dim);
+		var i, j;
+		for (i = 0; i < dim; ++i) {
+			for (j = 0; j < dim; ++j) {
+				map[i][j] = ((i * dim) + j) / (dim * dim);
+			}
 		}
-	}
-	return map;
+		cb(map);
+	}, 1);
 }
 
 var testTerrain = false;
