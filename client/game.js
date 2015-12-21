@@ -7,10 +7,11 @@ var generateGradient = require('./generate-gradient');
 
 var Game = window.Class.extend({
 
-	init: function($canvas) {
-		this.ctx = $canvas.get(0).getContext('2d');
-		this.canvasWidth = $canvas.width();
-		this.canvasHeight = $canvas.height();
+	init: function(canvasMap) {
+		this.bgCtx = canvasMap.$bgCanvas.get(0).getContext('2d');
+		this.fgCtx = canvasMap.$fgCanvas.get(0).getContext('2d');
+		this.canvasWidth = canvasMap.$bgCanvas.width();
+		this.canvasHeight = canvasMap.$bgCanvas.height();
 
 		this.rafHandle = null;
 		this.timerTick = this.timerTick.bind(this);
@@ -24,7 +25,7 @@ var Game = window.Class.extend({
 		var self = this;
 		var downsampleFactor = 1;
 		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
-			drawLib.drawMap(self.ctx, map, self.gradient);
+			drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
 		});
 	},
 
@@ -53,7 +54,30 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-//		drawLib.clearCtx(this.ctx);
+		// lazy init test obj data
+		if (this.testX === undefined) {
+			this.testX = this.canvasWidth / 2;
+		}
+		if (this.testY === undefined) {
+			this.testY = this.canvasHeight / 2;
+		}
+		if (this.testV === undefined) {
+			this.testV = {
+				x: 500,
+				y: 125
+			};
+		}
+		// update test obj
+		this.testX += (this.testV.x * deltaMs / 1000);
+		this.testY += (this.testV.y * deltaMs / 1000);
+		while (this.testX < 0) this.testX += this.canvasWidth;
+		while (this.testY < 0) this.testY += this.canvasHeight;
+		while (this.testX > this.canvasWidth) this.testX -= this.canvasWidth;
+		while (this.testY > this.canvasHeight) this.testY -= this.canvasHeight;
+
+		// draw time
+		drawLib.clearCtx(this.fgCtx);
+		drawLib.drawTest(this.fgCtx, this.testX, this.testY);
 	}
 
 });
