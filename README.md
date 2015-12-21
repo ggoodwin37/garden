@@ -6,9 +6,6 @@ A simple ecology sim.
 #### TODO: general
 - `gulp less` automatically
 
-#### TODO: terrain
-- how do we handle redrawing terrain during game loop? can we cache the bitmap? or another layer?
-
 #### TODO: up next
 - make sure we have good abstractions for game map vs. bitmap
 - hook up to game loop

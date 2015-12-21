@@ -1,7 +1,5 @@
 //var constants = require('./constants');
 
-var BLANK_CANVAS_COLOR = '#0c0c0c';
-
 function rgbToStyleString(rgb) {
 	var r = Math.floor(rgb.r * 0xff);
 	var g = Math.floor(rgb.g * 0xff);
@@ -13,15 +11,15 @@ var drawLib = {
 	clearCtx: function(ctx) {
 		var w = ctx.canvas.clientWidth;
 		var h = ctx.canvas.clientHeight;
-		ctx.fillStyle = BLANK_CANVAS_COLOR;
-		ctx.fillRect(0, 0, w, h);
+		ctx.clearRect(0, 0, w, h);
 	},
 
 	// takes a 2d map with each value between 0,1 and maps that into the context
 	// this implementation assumes that the context device size will be bigger
 	// than the map's resolution, so we'll scale it using fillRect. There are
 	// probably more efficient ways to do this if we aren't scaling up.
-	drawMap: function(ctx, map, gradient) {
+	// TODO: now that we have trimmed maps, should just draw 1:1
+	drawMapScaled: function(ctx, map, gradient) {
 		var w = ctx.canvas.clientWidth;
 		var h = ctx.canvas.clientHeight;
 		var blockW = w / map.length;
@@ -43,6 +41,19 @@ var drawLib = {
 							 Math.ceil(blockH));
 			}
 		}
+	},
+
+	drawTest: function(ctx, cx, cy) {
+		var rBounding = 30;
+		var color = '#ff00ff';
+		ctx.save();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.beginPath();
+		ctx.arc(cx, cy, rBounding, 2 * Math.PI, false);
+		ctx.fillStyle = color;
+		ctx.closePath();
+		ctx.fill();
+		ctx.restore();
 	}
 };
 
