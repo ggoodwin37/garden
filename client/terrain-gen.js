@@ -183,8 +183,8 @@ function generateTerrain(width, height, cb) {
 	// at a given resolution before starting the square steps.
 	var stepDim = dim, stepResolution = 1;
 	while (stepDim >= 3) {
-		stepDim = Math.floor(stepDim / 2) + 1;
 		taskList.add(stepTask(stepDim, stepResolution));
+		stepDim = Math.floor(stepDim / 2) + 1;
 		stepResolution *= 2;
 	}
 	taskList.execute(function() {
