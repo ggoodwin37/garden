@@ -38,12 +38,15 @@ var Game = window.Class.extend({
 			self.startSim();
 		}, function(map, cur, tot) {
 			console.log('generate map progress: ' + cur + ' of ' + tot);
-			//drawLib.drawMapScaled(self.bgCtx, map, self.gradient); // too slow :(
+
+			// too slow :( TODO: more efficient drawing. this will become more interesting once you
+			// make the map gen granularity improvements.
+			//drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
 		});
 	},
 
 	startSim: function() {
-		this.sim = new Sim();
+		this.sim = new Sim(this.fgCtx, this.map);
 	},
 
 	start: function() {
