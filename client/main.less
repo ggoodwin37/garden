@@ -10,7 +10,12 @@ body {
 		bottom: 64px;
 
 		canvas {
-			background-color: #0c0c0c;
+			&[role="bg-canvas"] {
+				background-color: #0c0c0c;
+			}
+			&[role="fg-canvas"] {
+				background-color: transparent;
+			}
 			position: absolute;
 		}
 	}

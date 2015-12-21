@@ -7,10 +7,11 @@ var generateGradient = require('./generate-gradient');
 
 var Game = window.Class.extend({
 
-	init: function($canvas) {
-		this.ctx = $canvas.get(0).getContext('2d');
-		this.canvasWidth = $canvas.width();
-		this.canvasHeight = $canvas.height();
+	init: function(canvasMap) {
+		this.bgCtx = canvasMap.$bgCanvas.get(0).getContext('2d');
+		this.fgCtx = canvasMap.$fgCanvas.get(0).getContext('2d');
+		this.canvasWidth = canvasMap.$bgCanvas.width();
+		this.canvasHeight = canvasMap.$bgCanvas.height();
 
 		this.rafHandle = null;
 		this.timerTick = this.timerTick.bind(this);
@@ -24,7 +25,7 @@ var Game = window.Class.extend({
 		var self = this;
 		var downsampleFactor = 1;
 		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
-			drawLib.drawMap(self.ctx, map, self.gradient);
+			drawLib.drawMap(self.bgCtx, map, self.gradient);
 		});
 	},
 
@@ -53,7 +54,8 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-//		drawLib.clearCtx(this.ctx);
+		// TODO: test drawing some shit to this.fgCtx
+//		drawLib.clearCtx(this.bgCtx);
 	}
 
 });
