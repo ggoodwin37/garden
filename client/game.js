@@ -1,9 +1,10 @@
-//var $ = require('jquery');
+var $ = require('jquery');
 var raf = require('raf');
 var drawLib = require('./draw-lib');
 //var constants = require('./constants');
 var terrainGen = require('./terrain-gen');
 var generateGradient = require('./generate-gradient');
+var Sim = require('./sim');
 
 var Game = window.Class.extend({
 
@@ -18,15 +19,31 @@ var Game = window.Class.extend({
 		this.lastTickTime = null;
 
 		this.gradient = generateGradient.landscape();
-		this.testTerrain();
+		this.sim = null;  // will be started once map is generated
+		this.generateMap();
 	},
 
-	testTerrain: function() {
+	setStatus: function(statusText) {
+		$('.status-message').text(statusText);
+	},
+
+	generateMap: function() {
+		this.setStatus('Generating map');
 		var self = this;
 		var downsampleFactor = 1;
 		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
-			drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
+			self.map = map;
+			drawLib.drawMapScaled(self.bgCtx, self.map, self.gradient);
+			self.setStatus('Done');
+			self.startSim();
+		}, function(map, cur, tot) {
+			console.log('generate map progress: ' + cur + ' of ' + tot);
+			//drawLib.drawMapScaled(self.bgCtx, map, self.gradient); // too slow :(
 		});
+	},
+
+	startSim: function() {
+		this.sim = new Sim();
 	},
 
 	start: function() {
@@ -54,9 +71,12 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-		// update
-		// draw
-		//drawLib.clearCtx(this.fgCtx);
+		if (!this.sim) {
+			// sim not started yet
+			return;
+		}
+		this.sim.update(deltaMs);
+		this.sim.draw();
 	}
 
 });

@@ -133,7 +133,7 @@ function trimMap(map, width, height) {
 // uses diamond-square algorithm to generate a heightmap square.
 // since the algorithm needs a square of size 2^n+1, we'll generate the smallest map that fits width,height,
 // then trim out the desired size.
-function generateTerrain(width, height, cb) {
+function generateTerrain(width, height, cbDone, cbProgress) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
 
@@ -192,11 +192,14 @@ function generateTerrain(width, height, cb) {
 		taskList.add(stepTask(stepDim));
 		stepDim = Math.floor(stepDim / 2) + 1;
 	}
+	var cbProgressWrapper = function(cur, tot) {
+		if (cbProgress) {
+			cbProgress(map, cur, tot);
+		}
+	};
 	taskList.execute(function() {
-		cb(trimMap(map, width, height));
-	}, function(cur, tot) {
-		console.log('generate map progress: ' + cur + ' of ' + tot);
-	});
+		cbDone(trimMap(map, width, height));
+	}, cbProgressWrapper);
 }
 
 // fill a map with a linear gradient to test drawing funcs/gradients
