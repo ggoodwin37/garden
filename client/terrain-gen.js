@@ -38,18 +38,17 @@ function getDelta(dim) {
 	return Math.floor(dim / 2);
 }
 
-function diamond(map, xOffs, yOffs, dim, taskList) {
-	taskList.add(function() {
-		var values = [];
-		var delta = getDelta(dim);
-		var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
-			yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
-		values.push(map[xMin][yMin]);
-		values.push(map[xMax][yMin]);
-		values.push(map[xMin][yMax]);
-		values.push(map[xMax][yMax]);
-		map[xMid][yMid] = calcTargetVal(values, dim, map.length);
-	});
+function diamond(map, xOffs, yOffs, dim) {
+	var values = [];
+	var delta = getDelta(dim);
+	var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
+		yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
+
+	values.push(map[xMin][yMin]);
+	values.push(map[xMax][yMin]);
+	values.push(map[xMin][yMax]);
+	values.push(map[xMax][yMax]);
+	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
 function squareNorth(map, xOffs, yOffs, dim) {
@@ -108,13 +107,11 @@ function squareWest(map, xOffs, yOffs, dim) {
 	map[xMid][yMid] = calcTargetVal(values, dim, map.length);
 }
 
-function square(map, xOffs, yOffs, dim, taskList) {
-	taskList.add(function() {
-		squareNorth(map, xOffs, yOffs, dim);
-		squareEast(map, xOffs, yOffs, dim);
-		squareSouth(map, xOffs, yOffs, dim);
-		squareWest(map, xOffs, yOffs, dim);
-	});
+function square(map, xOffs, yOffs, dim) {
+	squareNorth(map, xOffs, yOffs, dim);
+	squareEast(map, xOffs, yOffs, dim);
+	squareSouth(map, xOffs, yOffs, dim);
+	squareWest(map, xOffs, yOffs, dim);
 }
 
 function trimMap(map, width, height) {
@@ -141,7 +138,7 @@ function trimMap(map, width, height) {
 function generateTerrain(width, height, cb) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
-	var taskList = new ChunkyTaskList(50000);
+	var taskList = new ChunkyTaskList(1);
 
 	// initial values in corners
 	var fixedCorners = false;
@@ -157,31 +154,38 @@ function generateTerrain(width, height, cb) {
 		map[dim - 1][dim - 1] = Math.random();
 	}
 
+	// this is the chunk of work that gets done for each grid resolution
+	function stepTask(step, resolution) {
+		return function() {
+			var i, j, xOffs, yOffs;
+			yOffs = 0;
+			for (i = 0; i < resolution; ++i) {
+				xOffs = 0;
+				for (j = 0; j < resolution; ++j) {
+					diamond(map, xOffs, yOffs, step);
+					xOffs += step - 1;
+				}
+				yOffs += step - 1;
+			}
+			yOffs = 0;
+			for (i = 0; i < resolution; ++i) {
+				xOffs = 0;
+				for (j = 0; j < resolution; ++j) {
+					square(map, xOffs, yOffs, step);
+					xOffs += step - 1;
+				}
+				yOffs += step - 1;
+			}
+		};
+	}
+
 	// can't use recursion here, because we have to do all diamond steps
 	// at a given resolution before starting the square steps.
-	var step = dim, resolution = 1;
-	var i, j, xOffs, yOffs;
-	while (step >= 3) {
-		yOffs = 0;
-		for (i = 0; i < resolution; ++i) {
-			xOffs = 0;
-			for (j = 0; j < resolution; ++j) {
-				diamond(map, xOffs, yOffs, step, taskList);
-				xOffs += step - 1;
-			}
-			yOffs += step - 1;
-		}
-		yOffs = 0;
-		for (i = 0; i < resolution; ++i) {
-			xOffs = 0;
-			for (j = 0; j < resolution; ++j) {
-				square(map, xOffs, yOffs, step, taskList);
-				xOffs += step - 1;
-			}
-			yOffs += step - 1;
-		}
-		step = Math.floor(step / 2) + 1;
-		resolution *= 2;
+	var stepDim = dim, stepResolution = 1;
+	while (stepDim >= 3) {
+		stepDim = Math.floor(stepDim / 2) + 1;
+		taskList.add(stepTask(stepDim, stepResolution));
+		stepResolution *= 2;
 	}
 	taskList.execute(function() {
 		cb(trimMap(map, width, height));
@@ -194,7 +198,6 @@ function generateTerrain(width, height, cb) {
 function generateTestTerrain(width, height, cb) {
 	window.setTimeout(function() {
 		var dim = getNextBinarySize(Math.max(width, height));
-		console.log('dim is ' + dim);
 		var map = make2dArray(dim, dim);
 		var i, j;
 		for (i = 0; i < dim; ++i) {

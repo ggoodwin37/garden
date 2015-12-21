@@ -19,7 +19,6 @@ var ChunkyTaskList = window.Class.extend({
 					break;
 				}
 				taskList.push(self.taskList.shift());
-				console.log('pushed a task, ' + self.taskList.length + ' remaining');
 			}
 			window.setTimeout(function() {
 				taskList.forEach(function(task) {
