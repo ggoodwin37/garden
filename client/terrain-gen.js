@@ -43,7 +43,6 @@ function diamond(map, xOffs, yOffs, dim) {
 	var delta = getDelta(dim);
 	var xMin = xOffs, xMid = xOffs + delta, xMax = xOffs + dim - 1,
 		yMin = yOffs, yMid = yOffs + delta, yMax = yOffs + dim - 1;
-
 	values.push(map[xMin][yMin]);
 	values.push(map[xMax][yMin]);
 	values.push(map[xMin][yMax]);
