@@ -133,10 +133,16 @@ function trimMap(map, width, height) {
 // uses diamond-square algorithm to generate a heightmap square.
 // since the algorithm needs a square of size 2^n+1, we'll generate the smallest map that fits width,height,
 // then trim out the desired size.
-// queueing up the actual work here so can avoid blocking UI thread for too long.
 function generateTerrain(width, height, cb) {
 	var dim = getNextBinarySize(Math.max(width, height));
 	var map = make2dArray(dim, dim);
+
+	// queueing up the actual work here so can avoid blocking UI thread for too long.
+	// TODO: this is only slightly better than just doing it all synchronously, since
+	// the last chunk is bigger than the others combined. you could make this really
+	// fine-grained by having a special purpose task list that just iterates from 0 to
+	// n and maps the various parameters into that range numerically. want to avoid
+	// lots of temp vars since there are hundreds of thousands of tasks.
 	var taskList = new ChunkyTaskList(1);
 
 	// initial values in corners
@@ -154,8 +160,9 @@ function generateTerrain(width, height, cb) {
 	}
 
 	// this is the chunk of work that gets done for each grid resolution
-	function stepTask(step, resolution) {
+	function stepTask(step) {
 		return function() {
+			var resolution = (map.length - 1) / (step - 1);
 			var i, j, xOffs, yOffs;
 			yOffs = 0;
 			for (i = 0; i < resolution; ++i) {
@@ -180,11 +187,10 @@ function generateTerrain(width, height, cb) {
 
 	// can't use recursion here, because we have to do all diamond steps
 	// at a given resolution before starting the square steps.
-	var stepDim = dim, stepResolution = 1;
+	var stepDim = dim;
 	while (stepDim >= 3) {
-		taskList.add(stepTask(stepDim, stepResolution));
+		taskList.add(stepTask(stepDim));
 		stepDim = Math.floor(stepDim / 2) + 1;
-		stepResolution *= 2;
 	}
 	taskList.execute(function() {
 		cb(trimMap(map, width, height));
