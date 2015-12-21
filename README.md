@@ -4,9 +4,7 @@ The Garden of Life and Death
 A simple ecology sim.
 
 ## TODO: general
-- gulp less automatically
+- `gulp less` automatically
 
 ## TODO: terrain
-- goal of this branch `terr2` is to:
-  - fix terrain gradient
-  - figure out mapping of 2n map size to world area.
+- how do we handle redrawing terrain during game loop? can we cache the bitmap? or another layer?
