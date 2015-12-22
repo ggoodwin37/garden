@@ -10,13 +10,13 @@ var Creature = window.Class.extend({
 		}
 	},
 	setRandomInitialPosition: function() {
-		// TODO: pick a suitable random location within this.map's dims
+		// abstract
 	},
 	update: function(deltaMs) {
-		// TODO
+		// TODO: what common update functionality?
 	},
 	draw: function(ctx) {
-		// no-op
+		// abstract
 	}
 });
 

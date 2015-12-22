@@ -41,6 +41,16 @@ var drawLib = {
 							 Math.ceil(blockH));
 			}
 		}
+	},
+	drawPlant: function(ctx, cx, cy, radius, color) {
+		ctx.save();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.beginPath();
+		ctx.arc(cx, cy, radius, 2 * Math.PI, false);
+		ctx.fillStyle = color;
+		ctx.closePath();
+		ctx.fill();
+		ctx.restore();
 	}
 };
 
