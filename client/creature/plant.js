@@ -10,14 +10,25 @@ var Plant = Creature.extend({
 	// override
 	setRandomInitialPosition: function() {
 		this._super();
-		var x, y, suitable = false;
+		// plants pick a few spots randomly, then select the spot that's closest to water from those.
+		var x, y, spots = [];
+		var numSuitableSpots = 5;
 		do {
 			x = Math.floor(Math.random() * this.map.length);
 			y = Math.floor(Math.random() * this.map[0].length);
-			suitable = (this.map[x][y] >= constants.mapWaterCutoff);
-		} while(!suitable);
-		this.x = x;
-		this.y = y;
+			if (this.map[x][y] >= constants.mapWaterCutoff) {
+				spots.push({
+					x: x,
+					y: y,
+					val: this.map[x][y]
+				});
+			}
+		} while(spots.length < numSuitableSpots);
+		spots.sort(function(a, b) {
+			return a.val - b.val;
+		});
+		this.x = spots[0].x;
+		this.y = spots[0].y;
 	},
 	update: function(deltaMs) {
 		this._super(deltaMs);
