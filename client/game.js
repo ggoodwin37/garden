@@ -1,9 +1,10 @@
-//var $ = require('jquery');
+var $ = require('jquery');
 var raf = require('raf');
 var drawLib = require('./draw-lib');
 //var constants = require('./constants');
 var terrainGen = require('./terrain-gen');
 var generateGradient = require('./generate-gradient');
+var Sim = require('./sim');
 
 var Game = window.Class.extend({
 
@@ -18,15 +19,34 @@ var Game = window.Class.extend({
 		this.lastTickTime = null;
 
 		this.gradient = generateGradient.landscape();
-		this.testTerrain();
+		this.sim = null;  // will be started once map is generated
+		this.generateMap();
 	},
 
-	testTerrain: function() {
+	setStatus: function(statusText) {
+		$('.status-message').text(statusText);
+	},
+
+	generateMap: function() {
+		this.setStatus('Generating map');
 		var self = this;
 		var downsampleFactor = 1;
 		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
-			drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
+			self.map = map;
+			drawLib.drawMapScaled(self.bgCtx, self.map, self.gradient);
+			self.setStatus('Done');
+			self.startSim();
+		}, function(map, cur, tot) {
+			console.log('generate map progress: ' + cur + ' of ' + tot);
+
+			// too slow :( TODO: more efficient drawing. this will become more interesting once you
+			// make the map gen granularity improvements.
+			//drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
 		});
+	},
+
+	startSim: function() {
+		this.sim = new Sim(this.fgCtx, this.map);
 	},
 
 	start: function() {
@@ -54,30 +74,12 @@ var Game = window.Class.extend({
 	},
 
 	gameLoop: function(deltaMs) {
-		// lazy init test obj data
-		if (this.testX === undefined) {
-			this.testX = this.canvasWidth / 2;
+		if (!this.sim) {
+			// sim not started yet
+			return;
 		}
-		if (this.testY === undefined) {
-			this.testY = this.canvasHeight / 2;
-		}
-		if (this.testV === undefined) {
-			this.testV = {
-				x: 500,
-				y: 125
-			};
-		}
-		// update test obj
-		this.testX += (this.testV.x * deltaMs / 1000);
-		this.testY += (this.testV.y * deltaMs / 1000);
-		while (this.testX < 0) this.testX += this.canvasWidth;
-		while (this.testY < 0) this.testY += this.canvasHeight;
-		while (this.testX > this.canvasWidth) this.testX -= this.canvasWidth;
-		while (this.testY > this.canvasHeight) this.testY -= this.canvasHeight;
-
-		// draw time
-		drawLib.clearCtx(this.fgCtx);
-		drawLib.drawTest(this.fgCtx, this.testX, this.testY);
+		this.sim.update(deltaMs);
+		this.sim.draw();
 	}
 
 });
