@@ -8,30 +8,31 @@ var Genes = window.Class.extend({
 	init: function() {
 		this.genes = {};
 	},
-	get: function(geneName) {
+	getGene: function(geneName) {
 		if (this.genes[geneName] === undefined) {
 			console.log('unknown gene named: ' + geneName);
 			return 0;
 		}
 		return this.genes[geneName];
 	},
-	set: function(geneName, val) {
+	setGene: function(geneName, val) {
 		this.genes[geneName] = val;
 	},
 	mutate: function(val) {
 		var outcomes = [
-			this.get('small-mutation-range') || 0.01,
-			this.get('medium-mutation-range') || 0.08,
-			this.get('large-mutation-range') || 0.25
+			this.getGene('small-mutation-range') || 0.01,
+			this.getGene('medium-mutation-range') || 0.08,
+			this.getGene('large-mutation-range') || 0.25
 		];
 		var probabilities = [
-			this.get('no-mutation-chance') || 0,
-			this.get('small-mutation-chance') || 0.1,
-			this.get('medium-mutation-chance') || 0.5,
-			this.get('large-mutation-chance') || 0.9
+			this.getGene('no-mutation-chance') || 0,
+			this.getGene('small-mutation-chance') || 0.1,
+			this.getGene('medium-mutation-chance') || 0.5,
+			this.getGene('large-mutation-chance') || 0.9
 		];
 		var map = {outcomes: outcomes, probabilities: probabilities};
 		var mutateLevel = probMap(map, Math.random());
+		// TODO: are negative values allowed? how about >1?
 		return val * (1 + randomBipolar(mutateLevel));
 	},
 	// single-parent version. basically a clone with mutations.

@@ -34,7 +34,6 @@ var Plant = Creature.extend({
 		this._super(deltaMs);
 	},
 	draw: function(ctx) {
-		this._super(ctx);
 		var radius = 12; // TODO: based on vitality
 		var color = 'rgb(0, 240, 0)';
 		drawLib.drawPlant(ctx, this.x, this.y, radius, color);
