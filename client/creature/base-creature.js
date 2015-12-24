@@ -18,6 +18,9 @@ var Creature = window.Class.extend({
 	setRandomInitialPosition: function() {
 		console.log('abstract');
 	},
+	onDying: function() {
+		console.log('abstract');
+	},
 	update: function(deltaMs) {
 		// all creatures burn vitality at a certain metabolic rate.
 		var rate = this.genes.getGene('metabolic-rate');  // consume vitality units per second

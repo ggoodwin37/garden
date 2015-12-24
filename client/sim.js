@@ -26,6 +26,9 @@ var Sim = window.Class.extend({
 	},
 	spawnNewPlant: function(params) {
 		this.plantMan.spawnWithParams(params);
+	},
+	plantDied: function(plant) {
+		this.plantMan.remove(plant);
 	}
 });
 

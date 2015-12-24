@@ -1,4 +1,6 @@
 module.exports = {
+	maxCreaturesPerMan: 1000,
+
 	// values close to zero are smoother.
 	terrainSmoothing: 4,
 

@@ -36,6 +36,7 @@ var Plant = Creature.extend({
 		this._super(deltaMs);
 		this.absorb(deltaMs);
 		this.trySpawn(deltaMs);
+		this.checkDead(deltaMs);
 	},
 	getFoodValue: function() {
 		var baseValue = this.map[this.x][this.y];
@@ -78,10 +79,9 @@ var Plant = Creature.extend({
 	trySpawn: function(deltaMs) {
 		var spawnCutoff = this.genes.getGene('spawn-cutoff') || 100;
 		if (this.vitality >= spawnCutoff) {
-			console.log('spawning');
 			// TODO: genes
 			var childVitality = this.vitality * 0.3;
-			this.vitality = this.vitailty * 0.6;
+			this.vitality = this.vitality * 0.6;
 			var maxSpawnRadius = this.genes.getGene('spawn-radius') || 100;
 			var initialLocation = this.getSpawnLocation(maxSpawnRadius);
 			var params = {};
@@ -92,6 +92,14 @@ var Plant = Creature.extend({
 			// TODO: better events/delegates
 			window.sim.spawnNewPlant(params);
 		}
+	},
+	checkDead: function(deltaMs) {
+		if (this.vitality < 1) {
+			window.sim.plantDied(this);
+		}
+	},
+	onDying: function() {
+		this.hitGrids.plant.unregister(this);
 	},
 	getDrawRadius: function() {
 		return Math.max(2, (this.vitality / 100) * 18);

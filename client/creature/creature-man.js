@@ -1,5 +1,6 @@
 // creature manager/factory
 var Plant = require('./plant');
+var constants = require('../constants');
 var _ = require('lodash');
 
 var CreatureMan = window.Class.extend({
@@ -22,9 +23,18 @@ var CreatureMan = window.Class.extend({
 		}
 	},
 	spawnWithParams: function(params) {
+		if (this.creatures.length >= constants.maxCreaturesPerMan) {
+			return;
+		}
 		if (this.type === 'plant') {
 			this.creatures.push(new Plant(this.map, this.hitGrids, params));
 		}
+	},
+	remove: function(entity) {
+		entity.onDying();
+		this.creatures = this.creatures.filter(function(thisCreature) {
+			return entity !== thisCreature;
+		});
 	},
 	updateAll: function(deltaMs) {
 		this.creatures.forEach(function(thisCreature) {
