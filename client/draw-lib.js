@@ -48,9 +48,9 @@ var drawLib = {
 	drawMap: function(ctx, map, gradient) {
 		var w = ctx.canvas.clientWidth;
 		var h = ctx.canvas.clientHeight;
-		if (w !== map.length || h !== map[0].length) {
-			console.log('drawMap: size mismatch, this case not handled yet');
-		}
+		// if (w !== map.length || h !== map[0].length) {
+		// 	console.log('drawMap: size mismatch, this case not handled yet');
+		// }
 		// lazy get image data
 		if (!drawMapImageData) {
 			drawMapImageData = ctx.getImageData(0, 0, w, h);
