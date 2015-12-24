@@ -2,6 +2,7 @@
 var Creature = require('./base-creature');
 var constants = require('../constants');
 var drawLib = require('../draw-lib');
+var unitClamp = require('../unit-clamp');
 
 var Plant = Creature.extend({
 	init: function(map, hitGrids, params) {
@@ -28,6 +29,7 @@ var Plant = Creature.extend({
 		});
 		this.x = spots[0].x;
 		this.y = spots[0].y;
+		this.hitGrids.plant.register(this);
 	},
 	update: function(deltaMs) {
 		this._super(deltaMs);
@@ -35,8 +37,12 @@ var Plant = Creature.extend({
 		// TODO: rest of loop. spawning, etc.
 	},
 	getFoodValue: function() {
-		var foodValue = 1 - ((this.map[this.x][this.y] - constants.mapWaterCutoff) / (1 - constants.mapWaterCutoff));
-		return foodValue;
+		var baseValue = this.map[this.x][this.y];
+		var competitorRange = this.genes.getGene('competitor-range');
+		var numCompetitors = this.hitGrids.plant.findAllEntitiesWithinRange(this, competitorRange).length - 1;
+		var maxCompetitors = 5;  // TODO: gene?
+		var foodValue = 1 - ((baseValue - constants.mapWaterCutoff) / (1 - constants.mapWaterCutoff));
+		return foodValue * (1 - unitClamp(numCompetitors / maxCompetitors));
 	},
 	absorb: function(deltaMs) {
 		var rate = this.genes.getGene('absorb-efficiency') || 1;
