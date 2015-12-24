@@ -3,14 +3,13 @@ var drawLib = require('./draw-lib');
 //var constants = require('./constants');
 
 var CreatureMan = require('./creature/creature-man');
-//var Plant = require('./creature/plant');
+var simConfig = require('./sim-config');
 
 var Sim = window.Class.extend({
 	init: function(ctx, map) {
 		this.ctx = ctx;
 		this.map = map;
-		var plantParams = {};
-		this.plantMan = new CreatureMan('plant', this.map, plantParams);
+		this.plantMan = new CreatureMan('plant', this.map, simConfig.plantParams);
 	},
 	update: function(deltaMs) {
 		this.plantMan.updateAll(deltaMs);

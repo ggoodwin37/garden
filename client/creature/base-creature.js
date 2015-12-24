@@ -12,7 +12,7 @@ var Creature = window.Class.extend({
 		}
 		this.activeState = 'none';
 		this.vitality = params.initialVitality || 1;
-		this.genes = params.genes || new Genes();
+		this.genes = new Genes(params.baselineGenes);
 	},
 	setRandomInitialPosition: function() {
 		console.log('abstract');

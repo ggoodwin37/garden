@@ -9,7 +9,6 @@ var Plant = Creature.extend({
 	},
 	// override
 	setRandomInitialPosition: function() {
-		this._super();
 		// plants pick a few spots randomly, then select the spot that's closest to water from those.
 		var x, y, spots = [];
 		var numSuitableSpots = 5;
