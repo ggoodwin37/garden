@@ -44,6 +44,8 @@ var Game = window.Class.extend({
 
 	startSim: function() {
 		this.sim = new Sim(this.fgCtx, this.map);
+		// TODO: I am in a hurry but would like to avoid doing this later ^_^
+		window.sim = this.sim;
 	},
 
 	start: function() {
@@ -77,6 +79,7 @@ var Game = window.Class.extend({
 		}
 		this.sim.update(deltaMs);
 		this.sim.draw();
+		this.setStatus('Plants: ' + this.sim.plantMan.creatures.length);
 	}
 
 });

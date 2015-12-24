@@ -13,7 +13,11 @@ var simConfig = {
 				'medium-mutation-chance': 0.93,
 				'small-mutation-range': 0.08,
 				'medium-mutation-range': 0.15,
-				'large-mutation-range': 0.30
+				'large-mutation-range': 0.30,
+
+				'competitor-range': 20,
+				'spawn-cutoff': 180,
+				'spawn-radius': 60
 			}
 		}
 	}
