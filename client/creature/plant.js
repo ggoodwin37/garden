@@ -44,7 +44,7 @@ var Plant = Creature.extend({
 		this.vitality += result;
 	},
 	getDrawRadius: function() {
-		return (this.vitality / 100) * 18;
+		return Math.max(2, (this.vitality / 100) * 18);
 	},
 	getDrawColor: function() {
 		// green intensity is based on some mishmash of genes and food values for now, might revisit this.
