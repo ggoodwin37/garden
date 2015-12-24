@@ -79,6 +79,7 @@ var Game = window.Class.extend({
 		}
 		this.sim.update(deltaMs);
 		this.sim.draw();
+		this.setStatus('Plants: ' + this.sim.plantMan.creatures.length);
 	}
 
 });
