@@ -23,6 +23,9 @@ var Sim = window.Class.extend({
 	draw: function() {
 		drawLib.clearCtx(this.ctx);
 		this.plantMan.drawAll(this.ctx);
+	},
+	spawnNewPlant: function(params) {
+		this.plantMan.spawnWithParams(params);
 	}
 });
 

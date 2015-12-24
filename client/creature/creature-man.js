@@ -21,6 +21,11 @@ var CreatureMan = window.Class.extend({
 			}
 		}
 	},
+	spawnWithParams: function(params) {
+		if (this.type === 'plant') {
+			this.creatures.push(new Plant(this.map, this.hitGrids, params));
+		}
+	},
 	updateAll: function(deltaMs) {
 		this.creatures.forEach(function(thisCreature) {
 			thisCreature.update(deltaMs);

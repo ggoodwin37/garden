@@ -7,12 +7,14 @@ var unitClamp = require('../unit-clamp');
 var Plant = Creature.extend({
 	init: function(map, hitGrids, params) {
 		this._super(map, hitGrids, params);
+		// x and y guaranteed to be set by this point, and won't change after this for the plant case.
+		this.hitGrids.plant.register(this);
 	},
 	// override
 	setRandomInitialPosition: function() {
 		// plants pick a few spots randomly, then select the spot that's closest to water from those.
 		var x, y, spots = [];
-		var numSuitableSpots = 5;
+		var numSuitableSpots = constants.plantsNumSuitableSpots;
 		do {
 			x = Math.floor(Math.random() * this.map.length);
 			y = Math.floor(Math.random() * this.map[0].length);
@@ -29,12 +31,11 @@ var Plant = Creature.extend({
 		});
 		this.x = spots[0].x;
 		this.y = spots[0].y;
-		this.hitGrids.plant.register(this);
 	},
 	update: function(deltaMs) {
 		this._super(deltaMs);
 		this.absorb(deltaMs);
-		// TODO: rest of loop. spawning, etc.
+		this.trySpawn(deltaMs);
 	},
 	getFoodValue: function() {
 		var baseValue = this.map[this.x][this.y];
@@ -48,6 +49,49 @@ var Plant = Creature.extend({
 		var rate = this.genes.getGene('absorb-efficiency') || 1;
 		var result = this.getFoodValue() * (deltaMs / 1000) * rate;
 		this.vitality += result;
+	},
+	getSpawnLocation: function(maxRadius) {
+		var x, y, spots = [];
+		var numSuitableSpots = constants.plantsNumSuitableSpots;
+		var theta, r;
+		do {
+			r = Math.random() * maxRadius;
+			theta = Math.random() * Math.PI * 2;
+			x = Math.max(0, Math.min(this.map.length - 1, this.x + Math.floor(Math.cos(theta) * r)));
+			y = Math.max(0, Math.min(this.map[0].length - 1, this.y + Math.floor(Math.sin(theta) * r)));
+			if (this.map[x][y] >= constants.mapWaterCutoff) {
+				spots.push({
+					x: x,
+					y: y,
+					val: this.map[x][y]
+				});
+			}
+		} while(spots.length < numSuitableSpots);
+		spots.sort(function(a, b) {
+			return a.val - b.val;
+		});
+		return {
+			x: spots[0].x,
+			y: spots[0].y
+		};
+	},
+	trySpawn: function(deltaMs) {
+		var spawnCutoff = this.genes.getGene('spawn-cutoff') || 100;
+		if (this.vitality >= spawnCutoff) {
+			console.log('spawning');
+			// TODO: genes
+			var childVitality = this.vitality * 0.3;
+			this.vitality = this.vitailty * 0.6;
+			var maxSpawnRadius = this.genes.getGene('spawn-radius') || 100;
+			var initialLocation = this.getSpawnLocation(maxSpawnRadius);
+			var params = {};
+			params.initialVitality = childVitality;
+			params.initialX = initialLocation.x;
+			params.initialY = initialLocation.y;
+			params.baselineGenes = this.genes.generateOffspringGenes();
+			// TODO: better events/delegates
+			window.sim.spawnNewPlant(params);
+		}
 	},
 	getDrawRadius: function() {
 		return Math.max(2, (this.vitality / 100) * 18);
