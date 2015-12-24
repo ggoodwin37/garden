@@ -4,9 +4,13 @@
 // governed by certain genes.
 var probMap = require('../prob-map');
 var randomBipolar = require('../random-bipolar');
+
 var Genes = window.Class.extend({
-	init: function() {
-		this.genes = {};
+	init: function(baseline) {
+		this.genes = baseline;
+
+		// start with an initial mutation with respect to baseline.
+		this.genes = this.generateOffspringGenes();
 	},
 	getGene: function(geneName) {
 		if (this.genes[geneName] === undefined) {
@@ -19,16 +23,16 @@ var Genes = window.Class.extend({
 		this.genes[geneName] = val;
 	},
 	mutate: function(val) {
+		var probabilities = [
+			this.getGene('no-mutation-chance') || 0.75,
+			this.getGene('small-mutation-chance') || 0.9,
+			this.getGene('medium-mutation-chance') || 0.98
+		];
 		var outcomes = [
+			0, // no mutation
 			this.getGene('small-mutation-range') || 0.01,
 			this.getGene('medium-mutation-range') || 0.08,
 			this.getGene('large-mutation-range') || 0.25
-		];
-		var probabilities = [
-			this.getGene('no-mutation-chance') || 0,
-			this.getGene('small-mutation-chance') || 0.1,
-			this.getGene('medium-mutation-chance') || 0.5,
-			this.getGene('large-mutation-chance') || 0.9
 		];
 		var map = {outcomes: outcomes, probabilities: probabilities};
 		var mutateLevel = probMap(map, Math.random());

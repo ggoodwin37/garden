@@ -33,15 +33,12 @@ var Game = window.Class.extend({
 		var downsampleFactor = 1;
 		terrainGen(this.canvasWidth / downsampleFactor, this.canvasHeight / downsampleFactor, function(map) {
 			self.map = map;
-			drawLib.drawMapScaled(self.bgCtx, self.map, self.gradient);
+			drawLib.drawMap(self.bgCtx, self.map, self.gradient);
 			self.setStatus('Done');
 			self.startSim();
 		}, function(map, cur, tot) {
 			console.log('generate map progress: ' + cur + ' of ' + tot);
-
-			// too slow :( TODO: more efficient drawing. this will become more interesting once you
-			// make the map gen granularity improvements.
-			//drawLib.drawMapScaled(self.bgCtx, map, self.gradient);
+			drawLib.drawMap(self.bgCtx, map, self.gradient);
 		});
 	},
 

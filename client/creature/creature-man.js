@@ -1,5 +1,6 @@
 // creature manager/factory
 var Plant = require('./plant');
+var _ = require('lodash');
 
 var CreatureMan = window.Class.extend({
 	init: function(type, map, params) {
@@ -10,8 +11,8 @@ var CreatureMan = window.Class.extend({
 		this.initialSetup();
 	},
 	initialSetup: function() {
-		var initialCreatures = 4;
-		var params = {};  // TODO: based on this.params;
+		var initialCreatures = this.params.count;
+		var params = _.clone(this.params.individualParams, true);
 		var i;
 		if (this.type === 'plant') {
 			for (i = 0; i < initialCreatures; ++i) {
