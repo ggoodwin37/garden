@@ -1,9 +1,11 @@
 var simConfig = {
 	plantParams: {
-		count: 1,
+		count: 30,
 		individualParams: {
+			initialVitality: 1,
 			baselineGenes: {
-				'metabolic-rate': 20,
+				'metabolic-rate': 60,
+				'absorb-efficiency': 80,
 
 				// mutation probabilities and outcomes
 				'no-mutation-chance': 0.50,
