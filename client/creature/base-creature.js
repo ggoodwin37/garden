@@ -2,8 +2,9 @@
 var Genes = require('./genes');
 
 var Creature = window.Class.extend({
-	init: function(map, params) {
+	init: function(map, hitGrids, params) {
 		this.map = map;
+		this.hitGrids = hitGrids;
 		if (params.initialX && params.initialY) {
 			this.x = params.initialX;
 			this.y = params.initialY;

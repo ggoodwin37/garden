@@ -3,9 +3,10 @@ var Plant = require('./plant');
 var _ = require('lodash');
 
 var CreatureMan = window.Class.extend({
-	init: function(type, map, params) {
+	init: function(type, map, hitGrids, params) {
 		this.type = type;
 		this.map = map;
+		this.hitGrids = hitGrids;
 		this.params = params;
 		this.creatures = [];
 		this.initialSetup();
@@ -16,7 +17,7 @@ var CreatureMan = window.Class.extend({
 		var i;
 		if (this.type === 'plant') {
 			for (i = 0; i < initialCreatures; ++i) {
-				this.creatures.push(new Plant(this.map, params));
+				this.creatures.push(new Plant(this.map, this.hitGrids, params));
 			}
 		}
 	},

@@ -4,8 +4,8 @@ var constants = require('../constants');
 var drawLib = require('../draw-lib');
 
 var Plant = Creature.extend({
-	init: function(map, params) {
-		this._super(map, params);
+	init: function(map, hitGrids, params) {
+		this._super(map, hitGrids, params);
 	},
 	// override
 	setRandomInitialPosition: function() {
